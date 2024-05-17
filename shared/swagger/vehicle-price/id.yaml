@@ -1,0 +1,70 @@
+get:
+  tags:
+  - "vehicle-price"
+  summary: "Lấy thông tin giá xe theo hạng"
+  operationId: "VehiclePriceDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/VehiclePrice"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "vehicle-price"
+  summary: "Cập nhật thông tin giá xe theo hạng"
+  operationId: "VehiclePriceEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      vehicle_class: select:config
+      branch_id: multi_select
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/VehiclePriceParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "vehicle-price"
+  summary: "Xóa giá xe theo hạng"
+  operationId: "VehiclePriceDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

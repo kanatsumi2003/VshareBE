@@ -1,0 +1,112 @@
+type: "object"
+properties:
+  fullname:
+    type: "string"
+  phone:
+    type: "string"
+  # password:
+  #   type: "string"
+  email:
+    type: "string"
+  zalo:
+    type: "string"
+  birthday:
+    type: "string"
+    description: Ngày sinh (YYYY-MM-DD)
+  identity_number:
+    type: "string"
+    description: CCCD/Hộ chiếu
+  identity_date:
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày cấp
+  driver_licence:
+    type: "string"
+    description: Số GPLX
+  driver_licence_date:
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày cấp
+  house_hold:
+    type: "string"
+    description: Sổ hộ khẩu
+  house_hold_date:
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày cấp SHK
+  other_paper:
+    type: "string"
+    description: Giấy tờ khác
+  other_paper_note:
+    type: "string"
+    description: Ghi chú Giấy tờ khác
+  asset_deposit:
+    type: "string"
+    description: Tài sản đặt cọc
+  asset_deposit_note:
+    type: "string"
+    description: Ghi chú tài sản đặt cọc
+  address:
+    type: "string"
+    description: Địa chỉ
+  customer_note:
+    type: "string"
+    description: Ghi chú
+  # trust_scores:
+  #   type: "array"
+  #   items:
+  #     type: "integer"
+  #     description: ID điểm tin cậy
+  #   example: [1]
+  customer_image_identity_front:
+    type: string
+    description: CMND/CCCD mặt trước
+  customer_image_identity_back:
+    type: string
+    description: CMND/CCCD mặt trước
+  customer_image_driver_licence_front:
+    type: string
+    description: Bằng lái xe mặt trước
+  customer_image_driver_licence_back:
+    type: string
+    description: Bằng lái xe mặt sau
+  customer_image_house_hold:  
+    type: array
+    description: Hộ khẩu
+    items:
+      type: string
+  customer_image_other_paper:  
+    type: array
+    description: Giấy tờ khác
+    items:
+      type: string
+  customer_image_asset_deposit:  
+    type: array
+    description: Tài sản đặt cọc
+    items:
+      type: string
+  verify_identity:
+    type: integer
+    description: Xác minh trạng thái CMND/CCCD
+    enum: [0, 10]
+    example: 0
+  verify_driver_licence:
+    type: integer
+    description: Xác minh trạng thái bằng lái xe
+    enum: [0, 10]
+    example: 0
+  verify_house_hold:
+    type: integer
+    description: Xác minh trạng thái hộ khẩu
+    enum: [0, 10]
+    example: 0
+  verify_other_paper:
+    type: integer
+    description: Xác minh trạng thái giấy tờ khác
+    enum: [0, 10]
+    example: 0
+  verify_asset_deposit:
+    type: integer
+    description: Xác minh trạng thái tài sản đặt cọc
+    enum: [0, 10]
+    example: 0

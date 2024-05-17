@@ -1,0 +1,64 @@
+get:
+  tags:
+  - "trust-score"
+  summary: "Lấy chi tiết điểm tín dụng"
+  operationId: "TrustScoreDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/TrustScore"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "trust-score"
+  summary: "Cập nhật điểm tín dụng"
+  operationId: "TrustScoreEdit"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/TrustScoreParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "trust-score"
+  summary: "Xóa điểm tín dụng"
+  operationId: "TrustScoreDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

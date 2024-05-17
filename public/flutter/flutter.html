@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Swagger to Flutter Admin</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	 
+	<style>
+		a:visited {
+		  color: #ccc;
+		}
+		 
+		h1 {text-align: center; margin:0}
+		.page-header { margin: 0}
+        #flutter_widget p{ font-weight: bold;}
+        #flutter_widget textarea{ width: 100%; height: 300px; margin-bottom: 20px;}
+	</style>
+    
+    
+</head>
+<body>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>
+                        Swagger Json 2.0 To Flutter Widget
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div style="display: block;margin : 20px;text-align: center; ">
+                    <input id="swagger20-api-docs" value="http://localhost:8080/api-docs" placeholder="Nhập link swagger 2.0 api docs" style="width: 600px;"/> <button onclick="generate()">Generate</button>
+                    </div>
+                    <div class="col-md-12" id="divResults">
+						
+					<div id="flutter_widget" style="width: 100%; height: 400px; margin: 0 auto"></div>
+
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+    <script src="/flutter/dist/bundle.js"></script> 
+</body>
+</html>
+

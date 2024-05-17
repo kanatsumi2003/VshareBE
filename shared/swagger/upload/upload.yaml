@@ -1,0 +1,32 @@
+
+post:
+  tags:
+  - "upload"
+  summary: "Upload tệp tin"
+  operationId: "UploadFile"
+  consumes:
+    - multipart/form-data
+  parameters:
+  - in: formData
+    name: file
+    type: file
+    description: Hỗ trợ các định dạng jpg, jpeg, png, pdf, docx
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "object"
+        properties:
+          status:
+            type: "string"
+          data:
+            type: "string"
+            description: Đường dẫn file
+        example:
+          status: "success"
+          data: "http://localhost:8800/uploads/default.jpeg"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

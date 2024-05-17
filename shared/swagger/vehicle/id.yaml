@@ -1,0 +1,77 @@
+get:
+  tags:
+  - "vehicle"
+  summary: "Lấy thông tin xe"
+  operationId: "VehicleDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Vehicle"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "vehicle"
+  summary: "Cập nhật thông tin xe"
+  operationId: "VehicleEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      vehicle_type: select:config
+      brand_id: select
+      model_id: select
+      vehicle_class: select:config
+      transmission: select:config
+      fuel: select:config
+      style: select:config
+      attributes: multi_select
+      image: file
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/VehicleParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "vehicle"
+  summary: "Xóa xe"
+  operationId: "VehicleDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

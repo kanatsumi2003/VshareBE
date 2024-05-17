@@ -1,0 +1,53 @@
+get:
+  tags:
+  - "province"
+  summary: "Danh sách tỉnh thành"
+  operationId: "ProvinceList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: Tên tỉnh thành
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: "integer"
+              description: ID
+            name:
+              type: "string"
+              description: Tên tỉnh thành
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "province"
+  summary: "Thêm mới tỉnh thành"
+  operationId: "ProvinceCreate"
+  parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/ProvinceParams"
+        - required:
+          - name
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

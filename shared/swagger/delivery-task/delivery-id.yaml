@@ -1,0 +1,101 @@
+get:
+  tags:
+  - "delivery-task"
+  summary: "Chi tiết giao nhận xe"
+  operationId: "DeliveryDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+    description: ID booking
+  responses:
+    200:
+      description: "Success"
+      schema:
+        allOf:
+          - $ref: "#/definitions/DeliveryParams"
+          - type: object
+            properties:
+              branch:
+                description: Thông tin chi nhánh
+                type: object
+                properties:
+                  bank_account_name: 
+                    type: string
+                    description: Tên chủ tài khoản
+                    example: Nguyễn Văn A
+                  bank_account_number: 
+                    type: string
+                    description: Số tài khoản
+                    example: '19035651301016'
+                  bank_name: 
+                    type: string
+                    description: Tên ngân hàng
+                    example: Teckcombank
+                  bank_branch_name: 
+                    type: string
+                    description: Tên chi nhánh
+                    example: CN Hai Bà Trưng
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+put:
+  tags:
+  - "delivery-task"
+  summary: "Cập nhật giao nhận"
+  operationId: "DeliveryEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      give_user_id: select
+      return_user_id: select
+      receive_note: textarea
+      return_note: textarea
+      deposit.identity_paper_returned: check
+      deposit.motor_returned: check
+      deposit.motor_registration_returned: check
+      deposit.cash_returned: check
+      before_car_image.car_back: file
+      before_car_image.car_left: file
+      before_car_image.car_right: file
+      before_car_image.car_interior: file
+      before_car_image.fuel_gauge: file
+      before_car_image.car_video: file
+      after_car_image.car_front: file
+      after_car_image.car_back: file
+      after_car_image.car_left: file
+      after_car_image.car_right: file
+      after_car_image.car_interior: file
+      after_car_image.fuel_gauge: file
+      after_car_image.car_video: file
+      booking_paper.rental_contract: file
+      booking_paper.receive_report: file
+      booking_paper.return_report: file
+      other_costs: select:config
+      add_ons: select:config
+      operation_costs.code: select:config
+      post_operation_costs.code: select:config
+      delivery_status: select:config
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+    description: ID booking
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/DeliveryParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

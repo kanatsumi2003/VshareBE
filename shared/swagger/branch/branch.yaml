@@ -1,0 +1,95 @@
+get:
+  tags:
+  - "branch"
+  summary: "Danh sách chi nhánh"
+  operationId: "BranchList"
+  parameters:
+  - in: "query"
+    name: "code"
+    type: "string"
+    description: "Mã chi nhánh"
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: "Tên chi nhánh"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            name:
+              type: string
+              description: Tên chi nhánh
+            code:
+              type: string
+              description: Mã chi nhánh
+            province_name:
+              type: string
+              description: Tỉnh thành
+            district_name:
+              type: string
+              description: Quận huyện
+            address:
+              type: string
+              description: Địa chỉ
+            rental_time:
+              type: string
+              description: Giờ cho thuê
+            active:
+              type: string
+              description: Trạng thái
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "branch"
+  summary: "Thêm mới chi nhánh"
+  operationId: "BranchCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      province_id: select
+      district_id: select
+      active: check
+      rental_time_from: time
+      rental_time_to: time
+      procedure.identity: select:config
+      procedure.household: select:config
+      procedure.driver_licence: select:config
+      procedure.deposit: select:config
+      procedure.labor_contract: select:config
+      procedure.other: select:config
+      add_ons: select:config
+      payment_methods: multi_select:config
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/BranchParams"
+        - required:
+          - name
+          - code
+          - province_id
+          - district_id
+          - address
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

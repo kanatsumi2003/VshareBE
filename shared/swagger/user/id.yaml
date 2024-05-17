@@ -1,0 +1,49 @@
+get:
+  tags:
+  - "user"
+  summary: "Lấy thông tin Người dùng"
+  operationId: "UserDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/User"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+ 
+put:
+  tags:
+  - "user"
+  summary: "Cập nhật thông tin Người dùng"
+  operationId: "UserEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      branch_id: multi_select
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/UserParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

@@ -1,0 +1,5338 @@
+swagger: '2.0'
+info:
+  description: Hệ thống luồng dữ liệu Vshare
+  version: 1.0.0
+  title: Vshare
+host: localhost:8800
+basePath: /api/v1
+tags:
+  - name: province
+    description: Quản lý Tỉnh thành
+  - name: district
+    description: Quản lý Quận huyện
+  - name: vehicle-brand
+    description: Quản lý Hãng xe
+  - name: vehicle-model
+    description: Quản lý Hiệu xe
+  - name: vehicle
+    description: Quản lý Kho xe
+  - name: attribute
+    description: Quản lý Các tính năng của xe
+  - name: branch-vehicle
+    description: Quản lý Xe chi nhánh
+  - name: vehicle-price
+    description: Cấu hình giá xe theo hạng
+  - name: customer
+    description: Quản lý Khách hàng
+  - name: booking
+    description: Quản lý Đơn đặt xe
+  - name: upload
+    description: Upload file
+  - name: user
+    description: Quản lý Người dùng
+  - name: trust-score
+    description: Quản lý điểm tín dụng
+  - name: booking-schedule
+    description: Quản lý lịch xe
+  - name: delivery-task
+    description: Quản lý giao nhận
+  - name: owner-contract
+    description: Quản lý hợp đồng
+schemes:
+  - http
+paths:
+  /customers:
+    get:
+      tags:
+        - customer
+      summary: Danh sách Khách hàng
+      operationId: CustomerList
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            profile_status: multi_select:config
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+        - in: query
+          name: fullname
+          type: string
+          description: Tên khách hàng
+        - in: query
+          name: email
+          type: string
+          description: Email
+        - in: query
+          name: bookings
+          type: string
+          description: Mã đơn hàng
+        - in: query
+          name: number_success_booking
+          type: integer
+          description: Số lượng đơn hàng thành công
+        - in: query
+          name: profile_status
+          type: integer
+          description: Trạng thái hồ sơ
+        - in: query
+          name: address
+          type: string
+          description: Địa chỉ
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                fullname:
+                  type: string
+                  description: Họ và tên
+                phone:
+                  type: string
+                  description: Số điện thoại
+                email:
+                  type: string
+                  description: Email
+                bookings:
+                  type: string
+                  description: Mã booking
+                number_success_booking:
+                  type: string
+                  description: Tình trạng
+                address:
+                  type: string
+                  description: Địa chỉ
+                profile_status:
+                  type: integer
+                  description: Hồ sơ
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - customer
+      summary: Thêm mới khách hàng
+      operationId: CustomerCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            deposit_asset: select:config
+            customer_image_identity: file
+            customer_image_driver_licence: file
+            customer_image_house_hold: file
+            customer_image_other_paper: file
+            customer_image_asset_deposit: file
+            verify_status.identity: select:config
+            verify_status.driver_licence: select:config
+            verify_status.house_hold: select:config
+            verify_status.other_paper: select:config
+            verify_status.asset_deposit: select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/CustomerParams'
+              - required:
+                  - phone
+                  - fullname
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /customers/{id}:
+    get:
+      tags:
+        - customer
+      summary: Lấy thông tin Khách hàng
+      operationId: CustomerDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Customer'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - customer
+      summary: Cập nhật thông tin Khách hàng
+      operationId: CustomerEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            birthday: date
+            identity_date: date
+            driver_licence_date: date
+            house_hold_date: date
+            customer_note: textarea
+            approve_note: textarea
+            customer_image_identity_front: file
+            customer_image_identity_back: file
+            customer_image_driver_licence_front: file
+            customer_image_driver_licence_back: file
+            customer_image_house_hold: multi_file
+            customer_image_other_paper: multi_file
+            customer_image_asset_deposit: multi_file
+            verify_identity: select:config
+            verify_driver_licence: select:config
+            verify_house_hold: select:config
+            verify_other_paper: select:config
+            verify_asset_deposit: select:config
+            asset_deposit: select:config
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CustomerParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /customers/{id}/bookings:
+    get:
+      tags:
+        - customer
+      summary: Lấy danh sách đơn hàng của Khách hàng
+      operationId: CustomerBookings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: query
+          name: 3p
+          type: string
+          default:
+            receive_datetime_from: date
+            receive_datetime_to: date
+            return_datetime_from: date
+            return_datetime_to: date
+            booking_status: multi_select:config
+            level: multi_select:config
+            source: select:config
+            estimate_branch_vehicle_id: select
+            actual_branch_vehicle_id: select
+            branch_id: select
+        - in: query
+          name: code
+          type: string
+        - in: query
+          name: level
+          type: string
+        - in: query
+          name: booking_status
+          type: integer
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: estimate_branch_vehicle_id
+          type: integer
+          description: Xe giao dự kiến
+        - in: query
+          name: actual_branch_vehicle_id
+          type: integer
+          description: Xe giao thực tế
+        - in: query
+          name: source
+          type: string
+          description: Nguồn
+        - in: query
+          name: receive_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận từ
+        - in: query
+          name: receive_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận đến
+        - in: query
+          name: return_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả từ
+        - in: query
+          name: return_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả đến
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                code:
+                  type: string
+                  description: Mã đơn
+                branch_id:
+                  type: string
+                  description: Chi nhánh
+                fullname:
+                  type: string
+                  description: Khách hàng
+                phone:
+                  type: string
+                  description: Số điện thoại
+                email:
+                  type: string
+                  description: Email
+                estimate_branch_vehicle_id:
+                  type: string
+                  description: Xe thuê dự kiến
+                actual_branch_vehicle_id:
+                  type: string
+                  description: Xe thuê thực tế
+                price:
+                  type: string
+                  description: Giá thuê DK/TT
+                receive_datetime:
+                  type: string
+                  description: Trả xe DK/TT
+                return_datetime:
+                  type: string
+                  description: Trả xe DK/TT
+                rental_duration:
+                  type: string
+                  description: Ngày thuê DK/TT
+                source:
+                  type: string
+                  description: Nguồn
+                level:
+                  type: string
+                  description: Level
+                booking_status:
+                  type: integer
+                  description: Trạng thái
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /provinces:
+    get:
+      tags:
+        - province
+      summary: Danh sách tỉnh thành
+      operationId: ProvinceList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên tỉnh thành
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                name:
+                  type: string
+                  description: Tên tỉnh thành
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - province
+      summary: Thêm mới tỉnh thành
+      operationId: ProvinceCreate
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/ProvinceParams'
+              - required:
+                  - name
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /provinces/{id}:
+    get:
+      tags:
+        - province
+      summary: Lấy thông tin tỉnh thành
+      operationId: ProvinceDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Province'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - province
+      summary: Cập nhật thông tin tỉnh thành
+      operationId: ProvinceEdit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProvinceParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - province
+      summary: Xóa tỉnh thành
+      operationId: ProvinceDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /districts:
+    get:
+      tags:
+        - district
+      summary: Danh sách quận huyện
+      operationId: DistrictList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên quận huyện
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                name:
+                  type: string
+                  description: Tên quận huyện
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - district
+      summary: Thêm mới quận huyện
+      operationId: DistrictCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            province_id: select
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/DistrictParams'
+              - required:
+                  - province_id
+                  - name
+                  - code
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /districts/{id}:
+    get:
+      tags:
+        - district
+      summary: Lấy thông tin quận huyện
+      operationId: DistrictDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/District'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - district
+      summary: Cập nhật thông tin quận huyện
+      operationId: DistrictEdit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: query
+          name: 3p
+          type: string
+          default:
+            province_id: select
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/DistrictParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - district
+      summary: Xóa quận huyện
+      operationId: DistrictDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-brands:
+    get:
+      tags:
+        - vehicle-brand
+      summary: Danh sách hãng xe
+      operationId: VehicleBrandList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên hãng xe
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                name:
+                  type: string
+                  description: Tên hãng xe
+                vehicle_type:
+                  type: string
+                  description: Loại xe
+                position:
+                  type: integer
+                  description: Thứ tự
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - vehicle-brand
+      summary: Thêm mới hãng xe
+      operationId: VehicleBrandCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_type: select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/VehicleBrandParams'
+              - required:
+                  - vehicle_type
+                  - name
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-brands/{id}:
+    get:
+      tags:
+        - vehicle-brand
+      summary: Lấy thông tin hãng xe
+      operationId: VehicleBrandDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleBrand'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - vehicle-brand
+      summary: Cập nhật thông tin hãng xe
+      operationId: VehicleBrandEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_type: select:config
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/VehicleBrandParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - vehicle-brand
+      summary: Xóa hãng xe
+      operationId: VehicleBrandDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-models:
+    get:
+      tags:
+        - vehicle-model
+      summary: Danh sách hiệu xe
+      operationId: VehicleModelList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên hiệu xe
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                brand_name:
+                  type: string
+                  description: Hãng xe
+                name:
+                  type: string
+                  description: Tên hiệu xe
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - vehicle-model
+      summary: Thêm mới hiệu xe
+      operationId: VehicleModelCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            brand_id: select
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/VehicleModelParams'
+              - required:
+                  - brand_id
+                  - name
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-models/{id}:
+    get:
+      tags:
+        - vehicle-model
+      summary: Lấy thông tin hiệu xe
+      operationId: VehicleModelDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehicleModel'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - vehicle-model
+      summary: Cập nhật thông tin hiệu xe
+      operationId: VehicleModelEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            brand_id: select
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/VehicleModelParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - vehicle-model
+      summary: Xóa hiệu xe
+      operationId: VehicleModelDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /attributes:
+    get:
+      tags:
+        - attribute
+      summary: Danh sách tính năng
+      operationId: AttributeList
+      parameters:
+        - in: query
+          name: name
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                name:
+                  type: string
+                  description: Tên tính năng
+                icon:
+                  type: string
+                  description: Icon/hình đại diện
+                priority:
+                  type: integer
+                  description: Thứ tự sắp xếp
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - attribute
+      summary: Thêm mới tính năng
+      operationId: AttributeCreate
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/AttributeParams'
+              - required:
+                  - name
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /attributes/{id}:
+    get:
+      tags:
+        - attribute
+      summary: Lấy thông tin tính năng
+      operationId: AttributeDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Attribute'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - attribute
+      summary: Cập nhật thông tin tính năng
+      operationId: AttributeEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            icon: file
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/AttributeParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - attribute
+      summary: Xóa tính năng
+      operationId: AttributeDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicles:
+    get:
+      tags:
+        - vehicle
+      summary: Danh sách kho xe
+      operationId: VehicleList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên xe
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                vehicle_type:
+                  type: string
+                  description: Loại xe
+                name:
+                  type: integer
+                  description: Tên xe
+                vehicle_class:
+                  type: string
+                  description: Hạng xe
+                version:
+                  type: string
+                  description: Phiên bản xe
+                seats:
+                  type: integer
+                  description: Số chỗ ngồi
+                transmission:
+                  type: string
+                  description: Truyền động
+                fuel:
+                  type: string
+                  description: Nhiên liệu
+                fuel_consumption:
+                  type: string
+                  description: Mức tiêu thụ
+                style:
+                  type: string
+                  description: Kiểu dáng
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - vehicle
+      summary: Thêm mới xe
+      operationId: VehicleCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_type: select:config
+            brand_id: select
+            model_id: select
+            vehicle_class: select:config
+            transmission: select:config
+            fuel: select:config
+            style: select:config
+            attributes: multi_select
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/VehicleParams'
+              - required:
+                  - vehicle_type
+                  - brand_id
+                  - model_id
+                  - version
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicles/{id}:
+    get:
+      tags:
+        - vehicle
+      summary: Lấy thông tin xe
+      operationId: VehicleDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Vehicle'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - vehicle
+      summary: Cập nhật thông tin xe
+      operationId: VehicleEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_type: select:config
+            brand_id: select
+            model_id: select
+            vehicle_class: select:config
+            transmission: select:config
+            fuel: select:config
+            style: select:config
+            attributes: multi_select
+            image: file
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/VehicleParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - vehicle
+      summary: Xóa xe
+      operationId: VehicleDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /branchs:
+    get:
+      tags:
+        - branch
+      summary: Danh sách chi nhánh
+      operationId: BranchList
+      parameters:
+        - in: query
+          name: code
+          type: string
+          description: Mã chi nhánh
+        - in: query
+          name: name
+          type: string
+          description: Tên chi nhánh
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                name:
+                  type: string
+                  description: Tên chi nhánh
+                code:
+                  type: string
+                  description: Mã chi nhánh
+                province_name:
+                  type: string
+                  description: Tỉnh thành
+                district_name:
+                  type: string
+                  description: Quận huyện
+                address:
+                  type: string
+                  description: Địa chỉ
+                rental_time:
+                  type: string
+                  description: Giờ cho thuê
+                active:
+                  type: string
+                  description: Trạng thái
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - branch
+      summary: Thêm mới chi nhánh
+      operationId: BranchCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            province_id: select
+            district_id: select
+            active: check
+            rental_time_from: time
+            rental_time_to: time
+            procedure.identity: select:config
+            procedure.household: select:config
+            procedure.driver_licence: select:config
+            procedure.deposit: select:config
+            procedure.labor_contract: select:config
+            procedure.other: select:config
+            add_ons: select:config
+            payment_methods: multi_select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/BranchParams'
+              - required:
+                  - name
+                  - code
+                  - province_id
+                  - district_id
+                  - address
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /branchs/{id}:
+    get:
+      tags:
+        - branch
+      summary: Lấy thông tin chi nhánh
+      operationId: BranchDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Branch'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - branch
+      summary: Cập nhật thông tin chi nhánh
+      operationId: BranchEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            province_id: select
+            district_id: select
+            active: check
+            rental_time_from: time
+            rental_time_to: time
+            procedure.identity: select:config
+            procedure.household: select:config
+            procedure.driver_licence: select:config
+            procedure.deposit: select:config
+            procedure.labor_contract: select:config
+            procedure.other: select:config
+            add_ons: select:config
+            payment_methods: multi_select:config
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/BranchParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - branch
+      summary: Xóa chi nhánh
+      operationId: BranchDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /branch-vehicles:
+    get:
+      tags:
+        - branch-vehicle
+      summary: Danh sách xe chi nhánh
+      operationId: BranchVehicleList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên xe
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                branch_name:
+                  type: string
+                  description: Chi nhánh
+                name:
+                  type: string
+                  description: Tên xe
+                owner_name:
+                  type: string
+                  description: Chủ xe
+                customer_base_price:
+                  type: string
+                  description: Giá ngày thường
+                customer_weekend_price:
+                  type: string
+                  description: Giá cuối tuần
+                customer_month_price:
+                  type: string
+                  description: Giá tháng
+                customer_month_km_limit:
+                  type: string
+                  description: Giới hạn km/tháng
+                customer_overkm_price:
+                  type: string
+                  description: Phí vượt km
+                customer_overtime_price:
+                  type: string
+                  description: Phí quá giờ
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - branch-vehicle
+      summary: Thêm mới xe chi nhánh
+      operationId: BranchVehicleCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_id: select
+            branch_id: select
+            owner_id: select
+            rental_type: select:config
+            has_maintain: check
+            has_insurance: check
+            attributes: multi_select
+            insurance_expire_date: date
+            registry_date: date
+            car_image.car_front: file
+            car_image.car_back: file
+            car_image.car_left: file
+            car_image.car_right: file
+            car_image.car_interior: file
+            car_image.fuel_gauge: file
+            car_image.car_video: file
+            latest_car_image.car_front: file
+            latest_car_image.car_back: file
+            latest_car_image.car_left: file
+            latest_car_image.car_right: file
+            latest_car_image.car_interior: file
+            latest_car_image.fuel_gauge: file
+            latest_car_image.car_video: file
+            active: check
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/BranchVehicleParams'
+              - type: object
+                properties:
+                  attributes:
+                    type: array
+                    items:
+                      type: integer
+                      description: ID tính năng xe chi nhánh
+              - required:
+                  - branch_id
+                  - vehicle_id
+                  - license_number
+                  - customer_base_price
+                  - customer_weekend_price
+                  - customer_day_km_limit
+                  - customer_overkm_price
+                  - customer_overtime_price
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /branch-vehicles/{id}:
+    get:
+      tags:
+        - branch-vehicle
+      summary: Lấy thông tin xe chi nhánh
+      operationId: BranchVehicleDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/BranchVehicle'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - branch-vehicle
+      summary: Cập nhật thông tin xe chi nhánh
+      operationId: BranchVehicleEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_id: select
+            branch_id: select
+            owner_id: select
+            rental_type: select:config
+            has_maintain: check
+            has_insurance: check
+            attributes: multi_select
+            insurance_expire_date: date
+            registry_date: date
+            car_image.car_front: file
+            car_image.car_back: file
+            car_image.car_left: file
+            car_image.car_right: file
+            car_image.car_interior: file
+            car_image.fuel_gauge: file
+            car_image.car_video: file
+            latest_car_image.car_front: file
+            latest_car_image.car_back: file
+            latest_car_image.car_left: file
+            latest_car_image.car_right: file
+            latest_car_image.car_interior: file
+            latest_car_image.fuel_gauge: file
+            latest_car_image.car_video: file
+            car_document_image.registration_document: file
+            car_document_image.registration_certificate: file
+            car_document_image.liability_insurance_certificate: file
+            car_document_image.physical_insurance_certificate: file
+            car_document_image.other_document: file
+            active: check
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/BranchVehicleParams'
+              - type: object
+                properties:
+                  attributes:
+                    type: array
+                    items:
+                      type: integer
+                      description: ID tính năng xe chi nhánh
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - branch-vehicle
+      summary: Xóa xe chi nhánh
+      operationId: BranchVehicleDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-prices:
+    get:
+      tags:
+        - vehicle-price
+      summary: Danh sách giá xe theo hạng
+      operationId: VehiclePriceList
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                branch_name:
+                  type: string
+                  description: Chi nhánh
+                vehicle_class:
+                  type: string
+                  description: Hạng xe
+                base_price:
+                  type: integer
+                  description: Giá ngày thường
+                weekend_price:
+                  type: integer
+                  description: Giá cuối tuần
+                month_price:
+                  type: integer
+                  description: Giá tháng
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - vehicle-price
+      summary: Thêm mới giá xe theo hạng
+      operationId: VehiclePriceCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            branch_id: multi_select
+            vehicle_class: select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              branch_id:
+                type: array
+                description: Chi nhánh
+                items:
+                  type: integer
+              vehicle_class:
+                type: string
+                description: Hạng xe
+                example: SUV
+              base_price:
+                type: integer
+                description: Giá ngày thường
+                example: 100000
+              weekend_price:
+                type: integer
+                description: Giá ngày cuối tuần
+                example: 110000
+              month_price:
+                type: integer
+                description: Giá thuê tháng
+                example: 18000000
+              customer_day_price_rules:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/definitions/CustomerDayPriceRule'
+                    - required:
+                        - day_count_from
+                        - day_count_to
+                        - price
+            required:
+              - vehicle_class
+              - base_price
+              - weekend_price
+              - month_price
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /vehicle-prices/{id}:
+    get:
+      tags:
+        - vehicle-price
+      summary: Lấy thông tin giá xe theo hạng
+      operationId: VehiclePriceDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/VehiclePrice'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - vehicle-price
+      summary: Cập nhật thông tin giá xe theo hạng
+      operationId: VehiclePriceEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            vehicle_class: select:config
+            branch_id: multi_select
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/VehiclePriceParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - vehicle-price
+      summary: Xóa giá xe theo hạng
+      operationId: VehiclePriceDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /bookings:
+    get:
+      tags:
+        - booking
+      summary: Danh sách đơn đặt xe
+      operationId: BookingList
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            receive_datetime_from: date
+            receive_datetime_to: date
+            return_datetime_from: date
+            return_datetime_to: date
+            booking_status: multi_select:config
+            level: multi_select:config
+            source: select:config
+            estimate_branch_vehicle_id: select
+            actual_branch_vehicle_id: select
+            branch_id: select
+        - in: query
+          name: code
+          type: string
+          description: Mã đơn hàng
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+        - in: query
+          name: email
+          type: string
+          description: Email
+        - in: query
+          name: fullname
+          type: string
+          description: Tên khách hàng
+        - in: query
+          name: level
+          type: string
+        - in: query
+          name: booking_status
+          type: integer
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: estimate_branch_vehicle_id
+          type: integer
+          description: Xe giao dự kiến
+        - in: query
+          name: actual_branch_vehicle_id
+          type: integer
+          description: Xe giao thực tế
+        - in: query
+          name: source
+          type: string
+          description: Nguồn
+        - in: query
+          name: receive_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận từ
+        - in: query
+          name: receive_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận đến
+        - in: query
+          name: return_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả từ
+        - in: query
+          name: return_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả đến
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                code:
+                  type: string
+                  description: Mã đơn
+                branch_id:
+                  type: string
+                  description: Chi nhánh
+                fullname:
+                  type: string
+                  description: Khách hàng
+                phone:
+                  type: string
+                  description: Số điện thoại
+                email:
+                  type: string
+                  description: Email
+                estimate_branch_vehicle_id:
+                  type: string
+                  description: Xe thuê dự kiến
+                actual_branch_vehicle_id:
+                  type: string
+                  description: Xe thuê thực tế
+                price:
+                  type: string
+                  description: Giá thuê DK/TT
+                receive_datetime:
+                  type: string
+                  description: Nhận xe DK/TT
+                return_datetime:
+                  type: string
+                  description: Trả xe DK/TT
+                rental_duration:
+                  type: string
+                  description: Ngày thuê DK/TT
+                source:
+                  type: string
+                  description: Nguồn
+                level:
+                  type: string
+                  description: Level
+                booking_status:
+                  type: integer
+                  description: Trạng thái
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - booking
+      summary: Thêm mới đơn đặt xe
+      operationId: BookingCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            source: select:config
+            vehicle_type: select:config
+            branch_id: select
+            estimate_branch_vehicle_id: select
+            actual_branch_vehicle_id: select
+            receive_type: select:config
+            give_user_id: select
+            return_user_id: select
+            saler_id: select
+            approve_by: select
+            approve_status: select:config
+            level: select:config
+            payment_method: select:config
+            receive_note: textarea
+            return_note: textarea
+            reason_rental: textarea
+            approve_note: textarea
+            identity_date: date
+            driver_licence_date: date
+            estimate_receive_datetime: datetime
+            estimate_return_datetime: datetime
+            contract_receive_datetime: datetime
+            contract_return_datetime: datetime
+            actual_receive_datetime: datetime
+            actual_return_datetime: datetime
+            estimate_deposit_paper: select:config
+            estimate_deposit_asset: select:config
+            deposit.identity_paper: select:config
+            deposit.identity_paper_returned: check
+            deposit.motor_returned: check
+            deposit.motor_registration_returned: check
+            deposit.cash_returned: check
+            customer_image.identity_front: file
+            customer_image.identity_back: file
+            customer_image.driver_licence_front: file
+            customer_image.driver_licence_back: file
+            customer_image.house_hold: file
+            before_car_image.car_front: file
+            before_car_image.car_back: file
+            before_car_image.car_left: file
+            before_car_image.car_right: file
+            before_car_image.car_interior: file
+            before_car_image.fuel_gauge: file
+            before_car_image.car_video: file
+            after_car_image.car_front: file
+            after_car_image.car_back: file
+            after_car_image.car_left: file
+            after_car_image.car_right: file
+            after_car_image.car_interior: file
+            after_car_image.fuel_gauge: file
+            after_car_image.car_video: file
+            booking_paper.rental_contract: file
+            booking_paper.receive_report: file
+            booking_paper.return_report: file
+            contract_created_by: select
+            contract_sign_date: datetime
+            return_customer_assets: check
+            hold_customer_note: textarea
+            hold_customer_reason: textarea
+            hold_customer_return_date: date
+            receive_vehicle_status: textarea
+            return_vehicle_status: textarea
+            other_costs: select:config
+            customer_note: textarea
+            birthday: date
+            booking_status: select:config
+            vehicle_full: check
+            return_vehicle_same: check
+            estimate_add_ons: select:config
+            add_ons: select:config
+            car_document_image.registration_document: file
+            car_document_image.registration_certificate: file
+            car_document_image.liability_insurance_certificate: file
+            car_document_image.physical_insurance_certificate: file
+            car_document_image.other_document: file
+            operation_costs.code: select:config
+            post_operation_costs.code: select:config
+            final_note: textarea
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/BookingParams'
+              - required:
+                  - source
+                  - vehicle_type
+                  - fullname
+                  - phone
+                  - estimate_branch_vehicle_id
+                  - estimate_price
+                  - receive_type
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /bookings/{id}:
+    get:
+      tags:
+        - booking
+      summary: Lấy thông tin đơn đặt xe
+      operationId: BookingDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Booking'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - booking
+      summary: Cập nhật thông tin đơn đặt xe
+      operationId: BookingEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            source: select:config
+            vehicle_type: select:config
+            branch_id: select
+            estimate_branch_vehicle_id: select
+            actual_branch_vehicle_id: select
+            receive_type: select:config
+            give_user_id: select
+            return_user_id: select
+            saler_id: select
+            approve_by: select
+            approve_status: select:config
+            level: select:config
+            payment_method: select:config
+            receive_note: textarea
+            return_note: textarea
+            reason_rental: textarea
+            approve_note: textarea
+            identity_date: date
+            driver_licence_date: date
+            estimate_receive_datetime: datetime
+            estimate_return_datetime: datetime
+            contract_receive_datetime: datetime
+            contract_return_datetime: datetime
+            actual_receive_datetime: datetime
+            actual_return_datetime: datetime
+            estimate_deposit_paper: select:config
+            estimate_deposit_asset: select:config
+            deposit.identity_paper: select:config
+            deposit.identity_paper_returned: check
+            deposit.motor_returned: check
+            deposit.motor_registration_returned: check
+            deposit.cash_returned: check
+            customer_image.identity_front: file
+            customer_image.identity_back: file
+            customer_image.driver_licence_front: file
+            customer_image.driver_licence_back: file
+            customer_image.house_hold: file
+            before_car_image.car_front: file
+            before_car_image.car_back: file
+            before_car_image.car_left: file
+            before_car_image.car_right: file
+            before_car_image.car_interior: file
+            before_car_image.fuel_gauge: file
+            before_car_image.car_video: file
+            after_car_image.car_front: file
+            after_car_image.car_back: file
+            after_car_image.car_left: file
+            after_car_image.car_right: file
+            after_car_image.car_interior: file
+            after_car_image.fuel_gauge: file
+            after_car_image.car_video: file
+            booking_paper.rental_contract: file
+            booking_paper.receive_report: file
+            booking_paper.return_report: file
+            contract_created_by: select
+            contract_sign_date: datetime
+            return_customer_assets: check
+            hold_customer_note: textarea
+            hold_customer_reason: textarea
+            hold_customer_return_date: date
+            receive_vehicle_status: textarea
+            return_vehicle_status: textarea
+            other_costs: select:config
+            customer_note: textarea
+            birthday: date
+            booking_status: select:config
+            vehicle_full: check
+            return_vehicle_same: check
+            add_ons: select:config
+            car_document_image.registration_document: file
+            car_document_image.registration_certificate: file
+            car_document_image.liability_insurance_certificate: file
+            car_document_image.physical_insurance_certificate: file
+            car_document_image.other_document: file
+            operation_costs.code: select:config
+            estimate_add_ons.code: select:config
+            post_operation_costs.code: select:config
+            final_note: textarea
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/BookingParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - booking
+      summary: Xóa đơn đặt xe
+      operationId: BookingDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /bookings/{id}/document-preview/{entity}:
+    get:
+      tags:
+        - booking
+      summary: Xem trước hợp đồng và biên bản giao xe
+      operationId: BookingDocument
+      produces:
+        - >-
+          application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: ID đơn hàng
+        - name: entity
+          in: path
+          required: true
+          type: string
+          description: Loại giấy tờ cần xem
+          enum:
+            - contract
+            - receive_report
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: file
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /uploads:
+    post:
+      tags:
+        - upload
+      summary: Upload tệp tin
+      operationId: UploadFile
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: Hỗ trợ các định dạng jpg, jpeg, png, pdf, docx
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              data:
+                type: string
+                description: Đường dẫn file
+            example:
+              status: success
+              data: http://localhost:8800/uploads/default.jpeg
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /exports/booking-list:
+    get:
+      tags:
+        - booking
+      summary: Xuất danh sách đơn hàng
+      operationId: BookingExport
+      parameters:
+        - in: query
+          name: code
+          type: string
+          description: Mã đơn hàng
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+        - in: query
+          name: fullname
+          type: string
+          description: Tên khách hàng
+        - in: query
+          name: level
+          type: string
+        - in: query
+          name: booking_status
+          type: integer
+        - in: query
+          name: estimate_branch_vehicle_id
+          type: integer
+          description: Xe giao dự kiến
+        - in: query
+          name: actual_branch_vehicle_id
+          type: integer
+          description: Xe giao thực tế
+        - in: query
+          name: source
+          type: string
+          description: Nguồn
+        - in: query
+          name: receive_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận từ
+        - in: query
+          name: receive_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày nhận đến
+        - in: query
+          name: return_datetime_from
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả từ
+        - in: query
+          name: return_datetime_to
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày trả đến
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Error
+  /exports/customer-list:
+    get:
+      tags:
+        - customer
+      summary: Xuất danh sách khách hàng
+      operationId: CustomerExport
+      parameters:
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+        - in: query
+          name: fullname
+          type: string
+          description: Tên khách hàng
+        - in: query
+          name: email
+          type: string
+          description: Email
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Error
+  /bookings/quick-booking:
+    post:
+      tags:
+        - booking
+      summary: Thêm đơn hàng từ lịch xe
+      operationId: QuickBooking
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            estimate_branch_vehicle_id: select
+            estimate_receive_datetime: datetime
+            estimate_return_datetime: datetime
+            booked_status: select:config
+            level: select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/QuickBookingParams'
+            required:
+              - fullname
+              - phone
+              - estimate_branch_vehicle_id
+              - estimate_receive_datetime
+              - estimate_return_datetime
+              - level
+              - booked_status
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Booking'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /bookings/quick-booking/{id}:
+    put:
+      tags:
+        - booking
+      summary: Thêm đơn hàng từ lịch xe (unavaiable)
+      operationId: QuickBooking
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            estimate_branch_vehicle_id: select
+            estimate_receive_datetime: datetime
+            estimate_return_datetime: datetime
+            booked_status: select:config
+            level: select:config
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/QuickBookingParams'
+            required:
+              - fullname
+              - phone
+              - estimate_branch_vehicle_id
+              - estimate_receive_datetime
+              - estimate_return_datetime
+              - level
+              - booked_status
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Booking'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /users:
+    get:
+      tags:
+        - user
+      summary: Danh sách Người dùng
+      operationId: UserList
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            branch_id: multi_select
+        - in: query
+          name: branch_id
+          type: integer
+          description: ID chi nhánh
+        - in: query
+          name: username
+          type: string
+          description: Tên đăng nhập
+        - in: query
+          name: fullname
+          type: string
+          description: Tên người dùng
+        - in: query
+          name: email
+          type: string
+          description: Email
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                branch_id:
+                  type: string
+                  description: Chi nhánh
+                username:
+                  type: string
+                  description: Tên đăng nhập
+                fullname:
+                  type: string
+                  description: Họ và tên
+                phone:
+                  type: string
+                  description: Số điện thoại
+                email:
+                  type: string
+                  description: Email
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - user
+      summary: Thêm mới người dùng
+      operationId: UserCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            branch_id: select
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/UserParams'
+              - required:
+                  - username
+                  - fullname
+                  - phone
+                  - branch_id
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /users/{id}:
+    get:
+      tags:
+        - user
+      summary: Lấy thông tin Người dùng
+      operationId: UserDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - user
+      summary: Cập nhật thông tin Người dùng
+      operationId: UserEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            branch_id: multi_select
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /trust-scores:
+    get:
+      tags:
+        - trust-score
+      summary: Danh sách điểm tín dụng
+      operationId: TrustScoreList
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Tên điểm tín dụng
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID
+                  example: 10
+                name:
+                  type: string
+                  description: Tên tiêu chí
+                trust_scores:
+                  type: string
+                  description: Điểm đánh giá
+                  default: 0
+                note:
+                  type: string
+                  description: Mô tả
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - trust-score
+      summary: Thêm mới điểm tín dụng
+      operationId: TrustScoreCreate
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/TrustScoreParams'
+              - required:
+                  - name
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /trust-scores/{id}:
+    get:
+      tags:
+        - trust-score
+      summary: Lấy chi tiết điểm tín dụng
+      operationId: TrustScoreDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TrustScore'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - trust-score
+      summary: Cập nhật điểm tín dụng
+      operationId: TrustScoreEdit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/TrustScoreParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - trust-score
+      summary: Xóa điểm tín dụng
+      operationId: TrustScoreDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /booked-schedules:
+    get:
+      tags:
+        - booking-schedule
+      summary: Lịch xe
+      operationId: BookingSchedule
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            from_date: date
+            to_date: date
+            vehicle_class: select:config
+            branch_id: select
+            show_avaiable: check
+            date_type: select:config
+            price_range: select:config
+        - in: query
+          name: from_date
+          type: string
+          description: Từ ngày
+          format: YYYY-MM-DD
+        - in: query
+          name: to_date
+          type: string
+          description: Đến ngày
+          format: YYYY-MM-DD
+        - in: query
+          name: date_type
+          type: string
+          description: Kiểu ngày cần tìm kiếm
+          enum:
+            - receive
+            - return
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: vehicle_class
+          type: string
+          description: Loại xe
+        - in: query
+          name: license_number
+          type: string
+          description: Biển số xe
+        - in: query
+          name: show_avaiable
+          type: string
+          enum:
+            - 0
+            - 1
+          description: Chỉ lấy xe trống
+        - in: query
+          name: price_range
+          type: string
+          description: Khoảng giá
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DefScheduleResponse'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /delivery-tasks:
+    get:
+      tags:
+        - delivery-task
+      summary: Danh sách giao nhận
+      operationId: DeliveryTaskList
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            from_date: date
+            to_date: date
+            task_type: select:config
+            task_status: multi_select:config
+            user_id: select
+            branch_id: select
+        - in: query
+          name: booking_code
+          type: string
+          description: Mã đơn hàng
+        - in: query
+          name: phone
+          type: string
+          description: Số điện thoại
+        - in: query
+          name: fullname
+          type: string
+          description: Tên khách hàng
+        - in: query
+          name: email
+          type: string
+          description: Email
+        - in: query
+          name: task_status
+          type: string
+          enum:
+            - pending
+            - canceled
+            - done
+          description: Trạng thái công việc
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: user_id
+          type: integer
+          description: Người thực hiện
+        - in: query
+          name: task_type
+          type: string
+          description: Công việc
+          enum:
+            - receive
+            - return
+        - in: query
+          name: from_date
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày thực hiện từ
+        - in: query
+          name: to_date
+          type: string
+          format: YYYY-MM-DD
+          description: Ngày thực hiện đến
+        - in: query
+          name: vehicle_name
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DeliveryTask'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /delivery-tasks/{id}:
+    put:
+      tags:
+        - delivery-task
+      summary: Cập nhật giao nhận
+      operationId: DeliveryTaskEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            task_status: select:config
+            user_id: select
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeliveryTaskParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /delivery-tasks/schedules:
+    get:
+      tags:
+        - delivery-task
+      summary: Lịch giao nhận
+      operationId: DeliverySchedule
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            from_date: date
+            to_date: date
+            branch_id: select
+            date_type: select:config
+            delivery_status: multi_select:config
+            price_range: select:config
+        - in: query
+          name: from_date
+          type: string
+          description: Từ ngày
+          format: YYYY-MM-DD
+        - in: query
+          name: to_date
+          type: string
+          description: Đến ngày
+          format: YYYY-MM-DD
+        - in: query
+          name: date_type
+          type: string
+          description: Kiểu ngày cần tìm kiếm
+          enum:
+            - receive
+            - return
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: delivery_status
+          type: string
+          description: Trạng thái
+          enum:
+            - pending
+            - received
+            - returned
+        - in: query
+          name: license_number
+          type: string
+          description: Biển số xe
+        - in: query
+          name: price_range
+          type: string
+          description: Khoảng giá
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DeliveryScheduleResponse'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /delivery-tasks/booking/{id}:
+    get:
+      tags:
+        - delivery-task
+      summary: Chi tiết giao nhận xe
+      operationId: DeliveryDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: ID booking
+      responses:
+        '200':
+          description: Success
+          schema:
+            allOf:
+              - $ref: '#/definitions/DeliveryParams'
+              - type: object
+                properties:
+                  branch:
+                    description: Thông tin chi nhánh
+                    type: object
+                    properties:
+                      bank_account_name:
+                        type: string
+                        description: Tên chủ tài khoản
+                        example: Nguyễn Văn A
+                      bank_account_number:
+                        type: string
+                        description: Số tài khoản
+                        example: '19035651301016'
+                      bank_name:
+                        type: string
+                        description: Tên ngân hàng
+                        example: Teckcombank
+                      bank_branch_name:
+                        type: string
+                        description: Tên chi nhánh
+                        example: CN Hai Bà Trưng
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - delivery-task
+      summary: Cập nhật giao nhận
+      operationId: DeliveryEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            give_user_id: select
+            return_user_id: select
+            receive_note: textarea
+            return_note: textarea
+            deposit.identity_paper_returned: check
+            deposit.motor_returned: check
+            deposit.motor_registration_returned: check
+            deposit.cash_returned: check
+            before_car_image.car_back: file
+            before_car_image.car_left: file
+            before_car_image.car_right: file
+            before_car_image.car_interior: file
+            before_car_image.fuel_gauge: file
+            before_car_image.car_video: file
+            after_car_image.car_front: file
+            after_car_image.car_back: file
+            after_car_image.car_left: file
+            after_car_image.car_right: file
+            after_car_image.car_interior: file
+            after_car_image.fuel_gauge: file
+            after_car_image.car_video: file
+            booking_paper.rental_contract: file
+            booking_paper.receive_report: file
+            booking_paper.return_report: file
+            other_costs: select:config
+            add_ons: select:config
+            operation_costs.code: select:config
+            post_operation_costs.code: select:config
+            delivery_status: select:config
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: ID booking
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeliveryParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /delivery-tasks/booking:
+    post:
+      tags:
+        - delivery-task
+      summary: Thêm mới giao nhận
+      operationId: DeliveryCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            give_user_id: select
+            return_user_id: select
+            receive_note: textarea
+            return_note: textarea
+            deposit.identity_paper_returned: check
+            deposit.motor_returned: check
+            deposit.motor_registration_returned: check
+            deposit.cash_returned: check
+            before_car_image.car_back: file
+            before_car_image.car_left: file
+            before_car_image.car_right: file
+            before_car_image.car_interior: file
+            before_car_image.fuel_gauge: file
+            before_car_image.car_video: file
+            after_car_image.car_front: file
+            after_car_image.car_back: file
+            after_car_image.car_left: file
+            after_car_image.car_right: file
+            after_car_image.car_interior: file
+            after_car_image.fuel_gauge: file
+            after_car_image.car_video: file
+            booking_paper.rental_contract: file
+            booking_paper.receive_report: file
+            booking_paper.return_report: file
+            other_costs: select:config
+            add_ons: select:config
+            operation_costs.code: select:config
+            post_operation_costs.code: select:config
+            delivery_status: select:config
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeliveryParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /owner-contracts:
+    get:
+      tags:
+        - owner-contract
+      summary: Danh sách hợp đồng
+      operationId: OwnerContractList
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            branch_id: select
+            rental_type: select:config
+        - in: query
+          name: vehicle_name
+          type: string
+          description: Tên xe
+        - in: query
+          name: branch_id
+          type: integer
+          description: Chi nhánh
+        - in: query
+          name: owner_name
+          type: string
+          description: Chủ xe
+        - in: query
+          name: rental_type
+          type: string
+          description: Loại thuê
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OwnerContractItem'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    post:
+      tags:
+        - owner-contract
+      summary: Thêm mới hợp đồng
+      operationId: OwnerContractCreate
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            contract_sign_date: date
+            branch_vehicle_id: select
+            owner_id: select
+            contract_created_by: select
+            rental_type: select:config
+            reconciliation: select:config
+            has_maintain: check
+            has_insurance: check
+            rental_from_date: date
+            rental_to_date: date
+            contract_paper.owner_contract: file
+            contract_paper.delivery_report: file
+            contract_note: textarea
+        - in: body
+          name: body
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/definitions/OwnerContractParams'
+              - required:
+                  - owner_id
+                  - branch_vehicle_id
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+  /owner-contracts/{id}:
+    get:
+      tags:
+        - owner-contract
+      summary: Lấy thông tin hợp đồng
+      operationId: OwnerContractDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OwnerContractDetail'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    put:
+      tags:
+        - owner-contract
+      summary: Cập nhật thông tin hợp đồng
+      operationId: OwnerContractEdit
+      parameters:
+        - in: query
+          name: 3p
+          type: string
+          default:
+            contract_sign_date: date
+            branch_vehicle_id: select
+            owner_id: select
+            contract_created_by: select
+            rental_type: select:config
+            reconciliation: select:config
+            has_maintain: check
+            has_insurance: check
+            rental_from_date: date
+            rental_to_date: date
+            contract_paper.owner_contract: file
+            contract_paper.delivery_report: file
+            contract_note: textarea
+            contract_images: multi_file
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/OwnerContractParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+    delete:
+      tags:
+        - owner-contract
+      summary: Xóa hợp đồng
+      operationId: OwnerContractDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        '400':
+          description: ERROR
+          schema:
+            $ref: '#/definitions/ApiResponseError'
+definitions:
+  ApiResponseError:
+    type: object
+    properties:
+      status:
+        type: string
+        enum:
+          - error
+      message:
+        type: string
+  CustomerParams:
+    type: object
+    properties:
+      fullname:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      zalo:
+        type: string
+      birthday:
+        type: string
+        description: Ngày sinh (YYYY-MM-DD)
+      identity_number:
+        type: string
+        description: CCCD/Hộ chiếu
+      identity_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày cấp
+      driver_licence:
+        type: string
+        description: Số GPLX
+      driver_licence_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày cấp
+      house_hold:
+        type: string
+        description: Sổ hộ khẩu
+      house_hold_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày cấp SHK
+      other_paper:
+        type: string
+        description: Giấy tờ khác
+      other_paper_note:
+        type: string
+        description: Ghi chú Giấy tờ khác
+      asset_deposit:
+        type: string
+        description: Tài sản đặt cọc
+      asset_deposit_note:
+        type: string
+        description: Ghi chú tài sản đặt cọc
+      address:
+        type: string
+        description: Địa chỉ
+      customer_note:
+        type: string
+        description: Ghi chú
+      customer_image_identity_front:
+        type: string
+        description: CMND/CCCD mặt trước
+      customer_image_identity_back:
+        type: string
+        description: CMND/CCCD mặt trước
+      customer_image_driver_licence_front:
+        type: string
+        description: Bằng lái xe mặt trước
+      customer_image_driver_licence_back:
+        type: string
+        description: Bằng lái xe mặt sau
+      customer_image_house_hold:
+        type: array
+        description: Hộ khẩu
+        items:
+          type: string
+      customer_image_other_paper:
+        type: array
+        description: Giấy tờ khác
+        items:
+          type: string
+      customer_image_asset_deposit:
+        type: array
+        description: Tài sản đặt cọc
+        items:
+          type: string
+      verify_identity:
+        type: integer
+        description: Xác minh trạng thái CMND/CCCD
+        enum:
+          - 0
+          - 10
+        example: 0
+      verify_driver_licence:
+        type: integer
+        description: Xác minh trạng thái bằng lái xe
+        enum:
+          - 0
+          - 10
+        example: 0
+      verify_house_hold:
+        type: integer
+        description: Xác minh trạng thái hộ khẩu
+        enum:
+          - 0
+          - 10
+        example: 0
+      verify_other_paper:
+        type: integer
+        description: Xác minh trạng thái giấy tờ khác
+        enum:
+          - 0
+          - 10
+        example: 0
+      verify_asset_deposit:
+        type: integer
+        description: Xác minh trạng thái tài sản đặt cọc
+        enum:
+          - 0
+          - 10
+        example: 0
+  Customer:
+    allOf:
+      - $ref: '#/definitions/CustomerParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+          created_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+          updated_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+  DefScheduleResponse:
+    type: object
+    properties:
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          minDate:
+            type: string
+            description: Giới hạn ngày tìm kiếm nhỏ nhất
+            example: '2022-10-20'
+          maxDate:
+            type: string
+            description: Giới hạn ngày tìm kiếm lớn nhất
+            example: '2022-10-22'
+          totalDays:
+            type: integer
+            description: Tổng số ngày trong khoảng tìm kiếm
+            example: 3
+          listDays:
+            type: array
+            description: Danh sách ngày trong khoảng tìm kiếm
+            items:
+              type: string
+              example: '2022-10-20'
+          weekends:
+            type: array
+            description: Danh sách các ngày cuối tuần
+            items:
+              type: string
+              example: '2022-10-21'
+          branchVehicles:
+            type: array
+            description: Danh sách xe
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID xe chi nhánh
+                  example: 1
+                name:
+                  type: string
+                  description: Tên xe
+                  example: 30F-22028 Toyota Vios 1.5 số Tự động Đen
+                customer_base_price:
+                  type: integer
+                  description: Giá ngày thường
+                  example: 600000
+                customer_weekend_price:
+                  type: integer
+                  description: Giá cuối tuần
+                  example: 800000
+                vehicle.image:
+                  type: string
+                  description: Link ảnh đại diện của xe
+                  example: >-
+                    http://localhost:8800/uploads/vios-nau-vang20230317145046.png
+          data:
+            type: array
+            description: Danh sách xe có trong lịch xe
+            items:
+              type: object
+              properties:
+                branch_vehicle_id:
+                  type: integer
+                  description: ID xe chi nhánh
+                items:
+                  type: array
+                  description: Danh sách các booking theo xe
+                  items:
+                    type: object
+                    properties:
+                      from:
+                        type: string
+                        description: Ngày giao
+                        example: '2022-10-20T01:00:00.000Z'
+                      to:
+                        type: string
+                        description: Ngày trả
+                        example: '2022-10-22T03:00:00.000Z'
+                      from_time:
+                        type: string
+                        description: Giờ giao xe
+                        example: '8:00'
+                      to_time:
+                        type: string
+                        description: Giờ trả xe
+                        example: '10:00'
+                      booking_id:
+                        type: integer
+                        description: ID booking
+                        example: 1
+                      booking_code:
+                        type: string
+                        description: Mã đơn hàng
+                      booking_status:
+                        type: string
+                        description: Trạng thái đơn hàng
+                      fullname:
+                        type: string
+                        description: Tên khách hàng
+                      phone:
+                        type: string
+                        description: Số điện thoại
+                      email:
+                        type: string
+                      zalo:
+                        type: string
+                      give_user:
+                        type: string
+                        description: Người giao xe
+                      return_user:
+                        type: string
+                        description: Người nhận xe
+                      detail:
+                        type: string
+                        description: Chi tiết booking
+                        example: |2-
+
+                              - Mã booking: VTCOTTL230512008
+                              - Trạng thái: Trả xe
+                              - Họ tên: Charis
+                              - SDT: 0999999999
+                              - Email: nguyen@gmail.com
+                              - Zalo: https://zalo.me/2761260980408892837
+                              - Dự kiến: 10:00 20/10 - 10:00 22/10
+                              - Thực tế: 10:00 20/10 - 10:00 22/10
+                              - Người giao: 
+                              - Người nhận: 
+                           
+  BranchParams:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Tên chi nhánh
+        example: Chi nhánh Ocen Park
+      code:
+        type: string
+        description: Mã chi nhánh (cho phép chữ & số)
+        example: VOP
+      province_id:
+        type: integer
+        description: Tỉnh/thành phố
+        example: 1
+      district_id:
+        type: integer
+        description: ID quận huyện
+        example: 1007
+      address:
+        type: string
+        description: Địa chỉ không bao gồm tỉnh thành, quận huyện
+        example: Park 02
+      latlng:
+        type: string
+        description: Tọa độ địa lý
+        example: 21.0244247,105.7938073
+      rental_time_from:
+        type: string
+        description: Giờ cho thuê từ
+        format: HH:mm
+        example: '07:00'
+      rental_time_to:
+        type: string
+        description: Giờ cho thuê đến
+        format: HH:mm
+        example: '21:00'
+      limit_km:
+        type: integer
+        description: Số km giới hạn/ngày
+        example: 250
+      overkm_fee:
+        type: integer
+        description: Phụ trội km (đ/km)
+        example: 5000
+      overtime_fee:
+        type: integer
+        description: Phụ trội thời gian (đ/giờ)
+        example: 10000
+      free_delivery_km:
+        type: integer
+        description: Số km giao nhận miễn phí (km)
+        example: 10
+      delivery_fee:
+        type: integer
+        description: Phí giao nhận (đ/km)
+        example: 15000
+      procedure:
+        $ref: '#/definitions/Procedure'
+        description: Thủ tục thuê xe
+      holiday_event_price:
+        $ref: '#/definitions/HolidayEventPrice'
+        description: Giá theo ngày lễ (<=100 tính theo %, > 100 tính theo giá fix)
+      week_days_price:
+        $ref: '#/definitions/WeekDaysPrice'
+        description: Giá theo ngày trong tuần (<=100 tính theo %, > 100 tính theo giá fix)
+      active:
+        type: boolean
+        description: Hoạt động
+        default: true
+        example: true
+      agent_name:
+        type: string
+        description: Tên người đại diện
+        example: Nguyễn Văn A
+      agent_phone:
+        type: string
+        description: SDT người đại diện
+        example: 999999999
+      bank_account_name:
+        type: string
+        description: Tên chủ tài khoản
+        example: Nguyễn Văn A
+      bank_account_number:
+        type: string
+        description: Số tài khoản
+        example: '19035651301016'
+      bank_name:
+        type: string
+        description: Tên ngân hàng
+        example: Teckcombank
+      bank_branch_name:
+        type: string
+        description: Tên chi nhánh
+        example: CN Hai Bà Trưng
+      tax_number:
+        type: string
+        description: Mã số thuế
+      add_ons:
+        type: array
+        description: Dịch vụ add-on
+        items:
+          $ref: '#/definitions/Addon'
+      location:
+        type: string
+        description: Vị trí maps
+        example: https://goo.gl/maps/kyhjjT2dseDGRvzY8
+      payment_methods:
+        type: array
+        description: Các phương thức thanh toán sử dụng
+        items:
+          type: string
+          description: Phương thức thanh toán
+  Branch:
+    allOf:
+      - $ref: '#/definitions/BranchParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+          created_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+          updated_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+  BookingParams:
+    type: object
+    properties:
+      source:
+        type: string
+        description: Nguồn
+        example: web
+      vehicle_type:
+        type: string
+        description: Loại xe
+        enum:
+          - C
+          - M
+      branch_id:
+        type: integer
+        description: Chi nhánh thuê
+        example: 2
+      customer_id:
+        type: integer
+        description: ID Khách hàng
+      fullname:
+        type: string
+        description: Họ và tên (*)
+        example: Nguyễn Văn A
+      phone:
+        type: string
+        description: Số điện thoại (*)
+        example: '0999999999'
+      email:
+        type: string
+        description: Email khách hàng
+        example: nva@gmail.com
+      birthday:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày sinh khách hàng
+        example: '1990-12-23'
+      identity_number:
+        type: string
+        description: CCCD/CMND/Hộ chiếu khách hàng
+        example: '162112733'
+      identity_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày cấp CCCD/CMND/Hộ chiếu
+        example: '2020-12-23'
+      driver_licence_number:
+        type: string
+        description: Số GPLX
+        example: '162112733'
+      driver_licence_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày cấp GPLX
+        example: '2020-12-23'
+      address:
+        type: string
+        description: Địa chỉ khách hàng
+        example: Park 02 Times City
+      customer_note:
+        type: string
+        description: Ghi chú về khách hàng
+      trust_score:
+        type: integer
+        description: Điểm thẩm định
+        example: 100
+      approve_status:
+        type: integer
+        description: Trạng thái thẩm định
+        example: 1
+      approve_by:
+        type: integer
+        description: Người thẩm định
+        example: 20
+      approve_note:
+        type: string
+        description: Ghi chú thẩm định
+        example: Khách đủ tiêu chuẩn để thuê xe
+      estimate_branch_vehicle_id:
+        type: integer
+        description: Xe thuê dự kiến
+        example: 10
+      actual_branch_vehicle_id:
+        type: integer
+        description: Xe giao thực tế
+        example: 10
+      estimate_prepay:
+        type: integer
+        description: Tiền cọc giữ xe tạm tính
+        example: 10000000
+      prepay:
+        type: integer
+        description: Tiền cọc giữ xe
+        example: 10000000
+      estimate_price:
+        type: integer
+        description: Tền thuê tạm tính (chưa gồm phí giao nhận)
+        example: 15200000
+      actual_price:
+        type: integer
+        description: Tiền thuê xe thực tế
+        example: 16020000
+      total_amount:
+        type: integer
+        description: Tổng tiền thuê xe sau KM
+        example: 30000
+      remain_amount:
+        type: integer
+        description: Số tiền cần thanh toán
+        example: 6020000
+      receive_note:
+        type: string
+        description: Ghi chú thêm khi giao xe
+      return_note:
+        type: string
+        description: Ghi chú thêm khi trả xe
+      reason_rental:
+        type: string
+        description: Lý do thuê
+      receive_type:
+        type: string
+        description: Hình thức nhận xe
+        example: home
+      delivery_fee:
+        type: integer
+        description: Phí giao nhận xe
+        example: 100000
+      receive_address:
+        type: string
+        description: Địa chỉ nhận xe
+      estimate_receive_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày nhận dự kiến
+        example: 2022-12-23 10:00
+      estimate_return_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày trả dự kiến
+        example: 2022-12-26 19:00
+      estimate_rental_duration:
+        type: string
+        description: Số ngày thuê dự kiến
+        example: 4d
+      estimate_deposit_paper:
+        type: string
+        description: Giấy tờ định đặt cọc
+      estimate_deposit_asset:
+        type: string
+        description: Tài sản định đặt cọc
+      actual_receive_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày nhận thực tế
+        example: 2022-12-23 10:00
+      actual_return_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày trả thực tế
+        example: 2022-12-26 21:00
+      actual_rental_duration:
+        type: string
+        description: Số ngày thuê thực tế
+        example: 4d
+      contract_receive_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày nhận
+        example: 2022-12-23 10:00
+      contract_return_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày trả
+        example: 2022-12-26 21:00
+      contract_rental_duration:
+        type: string
+        description: Số ngày thuê
+        example: 4d
+      receive_etc_balance:
+        type: integer
+        description: Tài khoản ETC lúc giao
+        example: 1050000
+      return_etc_balance:
+        type: integer
+        description: Tài khoản ETC lúc trả
+        example: 1050000
+      receive_km:
+        type: integer
+        description: Số km lúc nhận xe
+        example: 4000
+      return_km:
+        type: integer
+        description: Số km khi trả xe
+        example: 4800
+      receive_fuel:
+        type: integer
+        description: Nhiên liệu lúc nhận xe (%)
+        example: 100
+      return_fuel:
+        type: integer
+        description: Nhiên liệu lúc trả xe (%)
+        example: 80
+      give_user_id:
+        type: integer
+        description: Người giao xe
+        example: 4
+      return_user_id:
+        type: integer
+        description: Người nhận xe từ khách hàng
+        example: 5
+      saler_id:
+        type: integer
+        description: CSKH
+        example: 25
+      level:
+        type: string
+        description: Từ C3 đến L9
+        example: L9
+      other_costs:
+        type: array
+        description: Các loại phí phát sinh
+        items:
+          $ref: '#/definitions/OtherCost'
+      return_customer_assets:
+        type: boolean
+        description: Đã trả toàn bộ giấy tờ và tài sản đặt cọc
+      hold_customer_note:
+        type: string
+        description: Ghi chú giấy tờ/tài sản còn giữ lại của khách sau khi trả xe
+        example: Đăng ký xe, tiền cọc 15 triệu
+      hold_customer_return_date:
+        type: string
+        description: Thời gian dự kiến trả
+        example: '2022-10-10'
+      hold_customer_reason:
+        type: string
+        description: Lý do
+        example: Chưa trả đủ tiền thuê xe.
+      vehicle_full:
+        type: boolean
+        description: Xe hoạt động bình thường, đầy đủ giấy tờ và đồ dự phòng
+      receive_vehicle_status:
+        type: string
+        description: Tình trạng xe khi giao
+        example: Xe bị tróc sơn ở đuôi xe
+      return_vehicle_same:
+        type: boolean
+        description: Tình trạng xe khi trả giống ban đầu
+      return_vehicle_status:
+        type: string
+        description: Tình trạng xe khi trả
+        example: Xe bị tróc sơn ở đuôi xe
+      payment_method:
+        type: string
+        description: Hình thức thanh toán
+      vat:
+        $ref: '#/definitions/Vat'
+        description: Thông tin hóa đơn
+      deposit:
+        $ref: '#/definitions/Deposit'
+        description: Khách đặt cọc
+      deposit_images:
+        type: array
+        description: Ảnh tài sản đặt cọc
+        items:
+          type: string
+          description: Link file ảnh
+      customer_image:
+        $ref: '#/definitions/CustomerImage'
+        description: Ảnh chụp giấy tờ khách hàng
+      before_car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh góc chụp xe trước khi giao
+      after_car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh góc chụp xe sau khi trả
+      contract_created_by:
+        type: integer
+        description: Người làm hợp đồng
+        example: 10
+      contract_sign_date:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Thời gian làm hợp đồng
+        example: 2022-12-26 21:00
+      estimate_add_ons:
+        type: array
+        description: Dịch vụ add-on dự kiến
+        items:
+          $ref: '#/definitions/AddonPrice'
+          description: Dịch vụ mua thêm
+      add_ons:
+        type: array
+        description: Dịch vụ add-on
+        items:
+          $ref: '#/definitions/AddonPrice'
+          description: Dịch vụ mua thêm
+      booking_paper:
+        $ref: '#/definitions/BookingPaper'
+        description: Các loại hợp đồng, biên bản
+      booking_status:
+        type: integer
+        description: Trạng thái đơn hàng
+        example: 10
+      discount_code:
+        type: string
+        description: Mã khuyến mại
+      estimate_discount_amount:
+        type: integer
+        description: Số tiền khuyến mại tạm tính
+        example: 30000
+      discount_amount:
+        type: integer
+        description: Số tiền khuyến mại
+        example: 30000
+      vat_cost:
+        type: integer
+        description: Thuế VAT
+      operation_costs:
+        type: array
+        description: Các loại phí vận hành trước và trong giao dịch
+        items:
+          $ref: '#/definitions/OperationCost'
+      post_operation_costs:
+        type: array
+        description: Các loại phí vận hành sau giao dịch
+        items:
+          $ref: '#/definitions/OperationCost'
+      final_note:
+        type: string
+        description: Ghi chú thêm khi kết thúc hợp đồng
+      estimate_after_discount_amount:
+        type: integer
+        description: Tiền thuê sau khuyến mại
+      estimate_total_addon_amount:
+        type: integer
+        description: Tổng tiền addon tạm tính
+      estimate_total_amount:
+        type: integer
+        description: Tổng tiền thuê xe tạm tính
+      estimate_delivery_fee:
+        type: integer
+        description: Phí giao nhận tạm tính
+      estimate_vat_cost:
+        type: integer
+        description: Vat tạm tính
+      total_addon_amount:
+        type: integer
+        description: Tổng tiền addon
+      liquid_total_addon:
+        type: integer
+        description: Số tiền phát sinh thêm
+      liquid_total_amount:
+        type: integer
+        description: Tổng tiền thuê xe theo hợp đồng
+      liquid_total_amount_after_settlement:
+        type: integer
+        description: Số tiền sau quyết toán
+      liquid_paid_amount:
+        type: integer
+        description: Số tiền đã thanh toán
+      liquid_total_amount_left:
+        type: integer
+        description: Số tiền còn phải thanh toán
+  Booking:
+    allOf:
+      - $ref: '#/definitions/BookingParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+          code:
+            type: string
+            description: Mã đơn
+            example: VSTIOTTL221125001
+          created_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            description: Thời gian tạo
+            example: 2022-12-24T10:00:00+00.00
+          updated_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            description: Thời gian cập nhật gần nhất
+            example: 2022-12-24T10:00:00+00.00
+  DeliveryTask:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID
+        example: 1
+      vehicle_image:
+        type: string
+        description: Ảnh xe
+      vehicle_name:
+        type: string
+        description: Tên xe
+        example: 30F-22028 Toyota Vios 1.5 số Sàn Trắng
+      task_type:
+        type: string
+        description: Công việc
+        example: Nhận xe
+      do_at:
+        type: string
+        description: Thời gian thực hiện
+        format: DD/MM/YYYY HH:mm
+        example: 24/01/2023 11:00
+      booking_code:
+        type: string
+        description: Mã đơn hàng
+        example: VOPOTTL230611001
+      fullname:
+        type: string
+        description: Họ và tên
+        example: Nguyễn Văn A
+      phone:
+        type: string
+        description: Số điện thoại
+        example: 999999999
+      email:
+        type: string
+        description: Email
+        example: example@gmail.com
+      task_status:
+        type: string
+        description: Trạng thái
+        enum:
+          - pending
+          - canceled
+          - done
+      user_id:
+        type: string
+        description: Người thực hiện
+  DeliveryTaskParams:
+    type: object
+    properties:
+      task_status:
+        type: string
+        description: Trạng thái
+        enum:
+          - pending
+          - canceled
+          - done
+      user_id:
+        type: integer
+        description: Người thực hiện
+  DeliveryParams:
+    type: object
+    properties:
+      booking_id:
+        type: string
+        description: ID đơn hàng
+      booking_code:
+        type: string
+        description: Mã đơn hàng
+      branch_name:
+        type: string
+        description: Chi nhánh thuê
+        example: Ocen Park
+      fullname:
+        type: string
+        description: Họ và tên
+        example: Nguyễn Văn A
+      phone:
+        type: string
+        description: Số điện thoại
+        example: '0999999999'
+      branch_vehicle_name:
+        type: string
+        description: Tên xe
+      prepay:
+        type: integer
+        description: Tiền cọc giữ xe
+        example: 10000000
+      actual_price:
+        type: integer
+        description: Tiền thuê xe thực tế
+        example: 16020000
+      total_amount:
+        type: integer
+        description: Tổng tiền thuê xe sau KM
+        example: 30000
+      remain_amount:
+        type: integer
+        description: Số tiền cần thanh toán
+        example: 6020000
+      receive_note:
+        type: string
+        description: Ghi chú khi giao xe
+      return_note:
+        type: string
+        description: Ghi chú khi trả xe
+      delivery_fee:
+        type: integer
+        description: Phí giao nhận xe
+        example: 100000
+      estimate_discount_amount:
+        type: integer
+        description: Số tiền khuyến mại tạm tính
+        example: 30000
+      discount_amount:
+        type: integer
+        description: Số tiền khuyến mại
+        example: 30000
+      vat_cost:
+        type: integer
+        description: Thuế VAT
+      operation_costs:
+        type: array
+        description: Các loại phí vận hành trước và trong giao dịch
+        items:
+          $ref: '#/definitions/OperationCost'
+      post_operation_costs:
+        type: array
+        description: Các loại phí vận hành sau giao dịch
+        items:
+          $ref: '#/definitions/OperationCost'
+      receive_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày nhận
+        example: 2022-12-23 10:00
+      return_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày trả
+        example: 2022-12-26 19:00
+      rental_duration:
+        type: string
+        description: Số ngày thuê
+        example: 4.5
+      give_user_id:
+        type: integer
+        description: Người giao xe
+        example: 4
+      return_user_id:
+        type: integer
+        description: Người nhận xe từ khách hàng
+        example: 5
+      receive_etc_balance:
+        type: integer
+        description: Tài khoản ETC lúc giao
+        example: 1050000
+      return_etc_balance:
+        type: integer
+        description: Tài khoản ETC lúc trả
+        example: 1050000
+      receive_km:
+        type: integer
+        description: Số km lúc nhận xe
+        example: 4000
+      return_km:
+        type: integer
+        description: Số km khi trả xe
+        example: 4800
+      receive_fuel:
+        type: integer
+        description: Nhiên liệu lúc nhận xe (%)
+        example: 100
+      return_fuel:
+        type: integer
+        description: Nhiên liệu lúc trả xe (%)
+        example: 80
+      vehicle_full:
+        type: boolean
+        description: Xe hoạt động bình thường, đầy đủ giấy tờ và đồ dự phòng
+      receive_vehicle_status:
+        type: string
+        description: Tình trạng xe khi giao
+        example: Xe bị tróc sơn ở đuôi xe
+      return_vehicle_same:
+        type: boolean
+        description: Tình trạng xe khi trả giống ban đầu
+      return_vehicle_status:
+        type: string
+        description: Tình trạng xe khi trả
+        example: Xe bị tróc sơn ở đuôi xe
+      vat:
+        $ref: '#/definitions/Vat'
+        description: Thông tin hóa đơn
+      other_costs:
+        type: array
+        description: Các loại phí phát sinh
+        items:
+          $ref: '#/definitions/OtherCost'
+      deposit:
+        $ref: '#/definitions/Deposit'
+        description: Khách đặt cọc
+      deposit_images:
+        type: array
+        description: Ảnh tài sản đặt cọc
+        items:
+          type: string
+          description: Link file ảnh
+      before_car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh xe trước khi giao
+      after_car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh xe sau khi trả
+      add_ons:
+        type: array
+        description: Dịch vụ add-on
+        items:
+          $ref: '#/definitions/AddonPrice'
+          description: Dịch vụ mua thêm
+      booking_paper:
+        $ref: '#/definitions/BookingPaper'
+        description: Các loại hợp đồng, biên bản
+      delivery_status:
+        type: string
+        description: Trạng thái giao nhận
+        enum:
+          - pending
+          - received
+          - returned
+          - canceled
+  DeliveryScheduleResponse:
+    type: object
+    properties:
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          minDate:
+            type: string
+            description: Giới hạn ngày tìm kiếm nhỏ nhất
+            example: '2022-10-20'
+          maxDate:
+            type: string
+            description: Giới hạn ngày tìm kiếm lớn nhất
+            example: '2022-10-22'
+          totalDays:
+            type: integer
+            description: Tổng số ngày trong khoảng tìm kiếm
+            example: 3
+          listDays:
+            type: array
+            description: Danh sách ngày trong khoảng tìm kiếm
+            items:
+              type: string
+              example: '2022-10-20'
+          weekends:
+            type: array
+            description: Danh sách các ngày cuối tuần
+            items:
+              type: string
+              example: '2022-10-21'
+          branchVehicles:
+            type: array
+            description: Danh sách xe
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID xe chi nhánh
+                  example: 1
+                name:
+                  type: string
+                  description: Tên xe
+                  example: 30F-22028 Toyota Vios 1.5 số Tự động Đen
+                customer_base_price:
+                  type: integer
+                  description: Giá ngày thường
+                  example: 600000
+                customer_weekend_price:
+                  type: integer
+                  description: Giá cuối tuần
+                  example: 800000
+                vehicle.image:
+                  type: string
+                  description: Link ảnh đại diện của xe
+                  example: >-
+                    http://localhost:8800/uploads/vios-nau-vang20230317145046.png
+          data:
+            type: object
+            description: Danh sách xe
+            properties:
+              pending:
+                type: array
+                items:
+                  $ref: '#/definitions/DeliveryScheduleItem'
+              received:
+                type: array
+                items:
+                  $ref: '#/definitions/DeliveryScheduleItem'
+              returned:
+                type: array
+                items:
+                  $ref: '#/definitions/DeliveryScheduleItem'
+  DeliveryScheduleItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID xe chi nhánh
+        example: 1
+      vehicle_name:
+        type: string
+        description: Tên xe
+        example: 30F-22028 Toyota Vios 1.5 số Tự động Đen
+      customer_base_price:
+        type: integer
+        description: Giá ngày thường
+        example: 600000
+      customer_weekend_price:
+        type: integer
+        description: Giá cuối tuần
+        example: 800000
+      vehicle_image:
+        type: string
+        description: Link ảnh đại diện của xe
+        example: http://localhost:8800/uploads/vios-nau-vang20230317145046.png
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Ngày giao
+              example: '2022-10-20T01:00:00.000Z'
+            to:
+              type: string
+              description: Ngày trả
+              example: '2022-10-22T03:00:00.000Z'
+            from_time:
+              type: string
+              description: Giờ giao xe
+              example: '8:00'
+            to_time:
+              type: string
+              description: Giờ trả xe
+              example: '10:00'
+            delivery_status:
+              type: string
+              description: Trạng thái giao nhận
+              enum:
+                - pending
+                - received
+                - returned
+            booking_id:
+              type: integer
+              description: ID booking
+              example: 1
+            booking_code:
+              type: string
+              description: Mã đơn hàng
+            fullname:
+              type: string
+              description: Tên khách hàng
+            note:
+              type: string
+              description: Ghi chú
+  QuickBookingParams:
+    type: object
+    properties:
+      fullname:
+        type: string
+        description: Họ và tên
+        example: Nguyễn Văn A
+      phone:
+        type: string
+        description: Số điện thoại
+        example: '0999999999'
+      estimate_branch_vehicle_id:
+        type: integer
+        description: Xe thuê dự kiến
+        example: 10
+      estimate_receive_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày nhận dự kiến
+        example: 2022-12-23 10:00
+      estimate_return_datetime:
+        type: string
+        format: YYYY-MM-DD HH:mm
+        description: Ngày trả dự kiến
+        example: 2022-12-26 19:00
+      booked_status:
+        type: string
+        description: Trạng thái đặt
+        example: hold
+      level:
+        type: string
+        description: Level
+        example: L4
+  OwnerContractItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID
+        example: 10
+      vehicle_name:
+        type: string
+        description: Tên xe
+        example: 29B-76221 Toyota Vios Nâu
+      owner_name:
+        type: integer
+        description: Chủ xe
+        example: Đào Ngọc Minh
+      branch_id:
+        type: string
+        description: Chi nhánh
+        example: Ocen Park
+      rental_type:
+        type: string
+        description: Loại thuê
+      owner_day_price:
+        type: integer
+        description: Giá ngày
+        example: 600000
+      owner_month_price:
+        type: integer
+        description: Giá tháng
+        example: 18000000
+      owner_pin_price:
+        type: integer
+        description: Thuê pin
+        example: 1800000
+      has_insurance:
+        type: boolean
+        description: Bảo hiểm
+        example: false
+      has_maintain:
+        type: boolean
+        description: Bảo trì
+        example: true
+      current_km:
+        type: integer
+        description: Km lúc nhận xe
+        example: 27003
+      owner_month_km_limit:
+        type: integer
+        description: Giới hạn km
+        example: 60000
+      owner_overkm_price:
+        type: integer
+        description: Vượt km
+        example: 15000
+      contract_link:
+        type: string
+        description: Hợp đồng
+        example: https://example.com/owner_contract.docx
+  OwnerContractDetail:
+    allOf:
+      - $ref: '#/definitions/OwnerContractParams'
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+  OwnerContractParams:
+    type: object
+    properties:
+      contract_sign_date:
+        type: string
+        description: Thời gian làm hợp đồng
+        format: YYYY-MM-DD HH:mm
+        example: 2022-12-24 10:00
+      contract_created_by:
+        type: integer
+        description: Người làm hợp đồng
+        example: 10
+      contract_duration_month:
+        type: integer
+        description: Thời hạn hợp đồng (tháng)
+        example: 12
+      owner_id:
+        type: integer
+        description: Chủ xe (*)
+        example: 15
+      branch_vehicle_id:
+        type: integer
+        description: Xe chi nhánh (*)
+        example: 15
+      rental_from_date:
+        type: string
+        description: Ngày thuê từ
+        format: YYYY-MM-DD HH:mm
+        example: 2022-12-24 10:00
+      rental_to_date:
+        type: string
+        description: Ngày thuê đến
+        format: YYYY-MM-DD HH:mm
+        example: 2022-12-24 10:00
+      reconciliation:
+        type: string
+        description: Ngày đối soát
+        enum:
+          - early
+          - middle
+          - late
+          - ppt
+        example: middle
+      rental_type:
+        type: string
+        description: Hình thức hợp đồng
+        enum:
+          - M
+          - D
+        example: D
+      revenue_rate:
+        type: number
+        description: Tỉ lệ chia sẻ
+        example: 50
+      contract_paper:
+        $ref: '#/definitions/OwnerContractPaper'
+      contract_images:
+        type: array
+        description: Danh sách ảnh
+        items:
+          type: string
+      owner_day_price:
+        type: integer
+        description: Giá ngày
+        example: 600000
+      owner_month_price:
+        type: integer
+        description: Giá tháng
+        example: 18000000
+      owner_month_km_limit:
+        type: integer
+        description: Giới hạn km
+        example: 60000
+      owner_overkm_price:
+        type: integer
+        description: Giá vượt km
+        example: 15000
+      owner_pin_price:
+        type: integer
+        description: Giá thuê pin
+        example: 1800000
+      has_maintain:
+        type: boolean
+        description: Bảo trì
+        example: false
+      has_insurance:
+        type: boolean
+        description: Bảo hiểm
+        example: true
+      current_km:
+        type: integer
+        description: Km lúc nhận xe
+        example: 27003
+      contract_note:
+        type: string
+        description: Ghi chú hợp đồng
+  OwnerContractPaper:
+    type: object
+    description: Hợp đồng và biên bản
+    properties:
+      owner_contract:
+        type: string
+        description: Hợp đồng thuê với chủ xe
+        example: https://example.com/owner_contract.docx
+      delivery_report:
+        type: string
+        description: Biên bản bàn giao với chủ xe
+        example: https://example.com/delivery_report.docx
+  ProvinceParams:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Tên tỉnh thành
+      position:
+        type: integer
+        description: Thứ tự sắp xếp
+  Province:
+    allOf:
+      - $ref: '#/definitions/ProvinceParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+          code:
+            type: string
+            description: Mã tỉnh thành
+  DistrictParams:
+    type: object
+    properties:
+      province_id:
+        type: integer
+        description: Tỉnh/thành phố
+      name:
+        type: string
+        description: Tên quận huyện
+      position:
+        type: string
+        description: Thứ tự sắp xếp
+  District:
+    allOf:
+      - $ref: '#/definitions/DistrictParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+          code:
+            type: string
+            description: Mã quận huyện
+          parent_id:
+            type: integer
+            description: Tỉnh/thành phố
+  VehicleBrandParams:
+    type: object
+    properties:
+      vehicle_type:
+        type: string
+        description: Mã loại xe
+      name:
+        type: string
+        description: Tên hãng xe
+      position:
+        type: string
+        description: Thứ tự sắp xếp
+  VehicleBrand:
+    allOf:
+      - $ref: '#/definitions/VehicleBrandParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+  VehicleModelParams:
+    type: object
+    properties:
+      brand_id:
+        type: integer
+        description: ID hãng xe
+      name:
+        type: string
+        description: Tên hiệu xe
+  VehicleModel:
+    allOf:
+      - $ref: '#/definitions/VehicleModelParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+  VehicleParams:
+    type: object
+    properties:
+      vehicle_type:
+        type: string
+        description: Loại xe
+        enum:
+          - C
+          - M
+      brand_id:
+        type: integer
+        description: Hãng xe
+        example: 1
+      model_id:
+        type: integer
+        description: Hiệu xe
+        example: 1
+      vehicle_class:
+        type: string
+        description: Hạng xe
+        example: C
+      version:
+        type: string
+        description: Phiên bản
+        example: '2.0'
+      seats:
+        type: integer
+        description: Số chỗ ngồi
+        example: 4
+      transmission:
+        type: string
+        description: Truyền động
+        enum:
+          - M
+          - A
+      fuel:
+        type: string
+        description: Nhiên liệu
+        enum:
+          - G
+          - O
+          - E
+      fuel_consumption:
+        type: string
+        description: Mức tiêu thụ nhiên liệu (vd 10l/100km)
+        example: 10l/100km
+      style:
+        type: string
+        description: Kiểu dáng xe
+        enum:
+          - Sedan
+          - MVP
+          - SUV/CUV
+          - MiniVan/Van
+          - Hatchback
+          - Pickup
+        example: Sedan
+      attributes:
+        type: array
+        description: Tính năng xe
+        items:
+          type: integer
+          description: ID tính năng xe,
+        example:
+          - 1
+      image:
+        type: string
+        description: Ảnh đại diện
+  Vehicle:
+    allOf:
+      - $ref: '#/definitions/VehicleParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+          attributes:
+            type: array
+            items:
+              $ref: '#/definitions/Attribute'
+  AttributeParams:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Tên tính năng
+      icon:
+        type: string
+        description: Icon/hình đại diện
+      priority:
+        type: integer
+        description: Thứ tự sắp xếp
+  Attribute:
+    allOf:
+      - $ref: '#/definitions/AttributeParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+  Procedure:
+    type: object
+    properties:
+      identity:
+        type: string
+        description: CMND
+        enum:
+          - hold
+          - verify
+        example: verify
+      identity_note:
+        type: string
+        description: CMND ghi chú
+      household:
+        type: string
+        description: Sổ hộ khẩu
+        enum:
+          - hold
+          - verify
+        example: verify
+      household_note:
+        type: string
+        description: Sổ hộ khẩu ghi chú
+      driver_licence:
+        type: string
+        description: Bằng lái
+        enum:
+          - hold
+          - verify
+        example: verify
+      driver_licence_note:
+        type: string
+        description: Bằng lái ghi chú
+      deposit:
+        type: string
+        description: Đặt cọc
+        enum:
+          - hold
+          - verify
+        example: verify
+      deposit_note:
+        type: string
+        description: Đặt cọc ghi chú
+      labor_contract:
+        type: string
+        description: Hợp đồng lao động
+        enum:
+          - hold
+          - verify
+        example: hold
+      labor_contract_note:
+        type: string
+        description: Hợp đồng lao động ghi chú
+      other:
+        type: string
+        description: Giấy tờ khác
+        enum:
+          - hold
+          - verify
+        example: hold
+      other_note:
+        type: string
+        description: Giấy tờ khác ghi chú
+      identity_paper_returned:
+        type: boolean
+        description: Trạng thái trả giấy tờ
+      motor_returned:
+        type: boolean
+        description: Trạng thái trả xe máy
+      motor_registration_returned:
+        type: boolean
+        description: Trạng thái trả đãng ký xe
+  HolidayEventPrice:
+    type: object
+    properties:
+      national:
+        type: number
+        description: Mùng 2/9
+        example: 150
+      hungking:
+        type: number
+        description: Giỗ tổ Hùng Vương
+        example: 150
+      liberation:
+        type: number
+        description: 30/4-01/05
+        example: 10000
+      newyear:
+        type: number
+        description: Tết Dương lịch
+        example: 200
+      lunar:
+        type: number
+        description: Tết Âm lịch
+        example: 200
+  WeekDaysPrice:
+    type: object
+    properties:
+      mon:
+        type: number
+        description: Thứ 2
+      tue:
+        type: number
+        description: Thứ 3
+      wed:
+        type: number
+        description: Thứ 4
+      thu:
+        type: number
+        description: Thứ 5
+      fri:
+        type: number
+        description: Thứ 6
+      sat:
+        type: number
+        description: Thứ 7
+      sun:
+        type: number
+        description: Chủ Nhật
+  Addon:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Mã add-on
+      cost:
+        type: integer
+        description: Số tiền
+      unit:
+        type: string
+        description: Đơn vị tính
+      note:
+        type: string
+        description: Ghi chú
+  AddonPrice:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Mã add-on
+      cost:
+        type: integer
+        description: Số tiền
+      note:
+        type: string
+        description: Ghi chú
+  BranchVehicleParams:
+    type: object
+    properties:
+      vehicle_id:
+        type: integer
+        description: Kho xe (*)
+        example: 1
+      branch_id:
+        type: integer
+        description: Chi nhánh (*)
+        example: 2
+      owner_id:
+        type: integer
+        description: Chủ xe
+        example: 1
+      license_number:
+        type: string
+        description: Biển kiểm soát (*)
+        example: 30K1-15112
+      vehicle_color:
+        type: string
+        description: Màu sắc
+        example: Trắng
+      manufacture_year:
+        type: integer
+        description: Năm sản xuất
+        example: 2020
+      rental_type:
+        type: string
+        description: Hình thức cho thuê
+        enum:
+          - A
+          - D
+          - M
+        default: A
+        example: D
+      owner_day_price:
+        type: integer
+        description: Chi phí phải trả theo ngày (owner)
+        example: 100000
+      owner_month_price:
+        type: integer
+        description: Chi phí phải trả theo tháng (owner)
+        example: 10000000
+      owner_month_km_limit:
+        type: integer
+        description: Số km giới hạn/tháng (owner)
+        example: 3000
+      owner_overkm_price:
+        type: integer
+        description: Phí vượt km (owner)
+        example: 10000
+      customer_base_price:
+        type: integer
+        description: Giá cho khách thuê ngày thường (*)
+        example: 600000
+      customer_weekend_price:
+        type: integer
+        description: Giá thuê xe ngày cuối tuần (*)
+        example: 700000
+      customer_month_price:
+        type: integer
+        description: Giá cho khách thuê theo tháng
+        example: 18000000
+      customer_month_km_limit:
+        type: integer
+        description: Giới hạn km/tháng cho khách
+        example: 2000
+      customer_day_km_limit:
+        type: integer
+        description: Giới hạn km/ngày cho khách (*)
+        example: 2000
+      customer_overkm_price:
+        type: integer
+        description: Phí vượt km (*)
+        example: 5000
+      customer_overtime_price:
+        type: integer
+        description: Phí quá giờ (*)
+        example: 10000
+      position_company:
+        type: string
+        description: Tên công ty định vị
+      position_username:
+        type: string
+        description: Tên đăng nhập tk định vị
+      position_password:
+        type: string
+        description: Mật khẩu tk định vị
+      has_maintain:
+        type: boolean
+        description: Bảo dưỡng
+        example: true
+      has_insurance:
+        type: boolean
+        description: Bảo hiểm
+        example: true
+      insurance_brand:
+        type: string
+        description: Hãng bảo hiểm
+      insurance_phone:
+        type: string
+        description: Số điện thoại bảo hiểm
+      insurance_expire_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày hết hạn bảo hiểm
+        example: '2023-10-10'
+      etc_username:
+        type: string
+        description: Tài khoản ETC
+      etc_password:
+        type: string
+        description: Mật khẩu ETC
+      etc_balance:
+        type: integer
+        description: Số dư tài khoản ETC
+      registry_date:
+        type: string
+        format: YYYY-MM-DD
+        description: Ngày đăng kiểm
+        example: '2021-10-10'
+      current_km:
+        type: integer
+        description: Số km khi nhận từ chủ xe
+        example: 54211
+      attributes:
+        type: array
+        description: Tính năng xe
+        items:
+          type: integer
+          description: ID tính năng xe
+        example:
+          - 1
+      customer_day_price_rules:
+        type: array
+        items:
+          allOf:
+            - $ref: '#/definitions/CustomerDayPriceRule'
+            - required:
+                - day_count_from
+                - day_count_to
+                - price
+      car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh các góc chụp xe
+      latest_car_image:
+        $ref: '#/definitions/CarImage'
+        description: Ảnh các góc chụp xe hiện tại
+      latest_km:
+        type: integer
+        description: Số km hiện tại
+      latest_fuel:
+        type: integer
+        description: Nhiên liệu hiện tại (%)
+      car_document_image:
+        $ref: '#/definitions/CarDocumentImage'
+        description: Ảnh các giấy tờ xe
+      active:
+        type: boolean
+        description: Trạng thái hoạt động
+  BranchVehicle:
+    allOf:
+      - $ref: '#/definitions/BranchVehicleParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+          name:
+            type: string
+            description: Tên xe
+          created_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+          updated_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            example: 2022-12-24T10:00:00+00.00
+          attributes:
+            type: array
+            items:
+              $ref: '#/definitions/Attribute'
+          customer_day_price_rules:
+            type: array
+            items:
+              $ref: '#/definitions/CustomerDayPriceRule'
+  CustomerDayPriceRule:
+    type: object
+    description: Cấu hình giá thuê bổ sung
+    properties:
+      day_count_from:
+        type: integer
+        description: Số ngày thuê từ
+        example: 5
+      day_count_to:
+        type: integer
+        description: Số ngày thuê đến
+        example: 7
+      price:
+        type: integer
+        description: Giá thuê (<=100 tính theo %, > 100 tính theo giá fix)
+        example: 98
+  VehiclePriceParams:
+    type: object
+    properties:
+      branch_id:
+        type: integer
+        description: Chi nhánh
+      vehicle_class:
+        type: string
+        description: Hạng xe
+        example: SUV
+      base_price:
+        type: integer
+        description: Giá ngày thường
+        example: 100000
+      weekend_price:
+        type: integer
+        description: Giá ngày cuối tuần
+        example: 110000
+      month_price:
+        type: integer
+        description: Giá thuê tháng
+        example: 18000000
+      customer_day_price_rules:
+        type: array
+        items:
+          allOf:
+            - $ref: '#/definitions/CustomerDayPriceRule'
+            - required:
+                - day_count_from
+                - day_count_to
+                - price
+  VehiclePrice:
+    allOf:
+      - $ref: '#/definitions/VehiclePriceParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+          created_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            description: Thời gian tạo
+            example: 2022-12-24T10:00:00+00.00
+          updated_at:
+            type: string
+            format: YYYY-MM-DDTHH:mm:ssz
+            description: Thời gian cập nhật gần nhất
+            example: 2022-12-24T10:00:00+00.00
+  Vat:
+    type: object
+    properties:
+      company_name:
+        type: string
+        description: Tên công ty
+      company_tax:
+        type: string
+        description: MST công ty
+      company_address:
+        type: string
+        description: Địa chỉ công ty
+      company_email:
+        type: string
+        description: Email công ty
+  CarImage:
+    type: object
+    properties:
+      car_front:
+        type: string
+        description: Ảnh chụp đầu xe
+      car_back:
+        type: string
+        description: Ảnh chụp đuôi xe
+      car_right:
+        type: string
+        description: Ảnh chụp bên phải xe
+      car_left:
+        type: string
+        description: Ảnh chụp bên trái xe
+      car_interior:
+        type: string
+        description: Ảnh nội thất
+      fuel_gauge:
+        type: string
+        description: Ảnh đồng hồ
+      car_video:
+        type: string
+        description: Video xe
+  CustomerImage:
+    type: object
+    properties:
+      identity_front:
+        type: string
+        description: CMND/CCCD mặt trước
+      identity_back:
+        type: string
+        description: CMND/CCCD mặt sau
+      driver_licence_front:
+        type: string
+        description: Bằng lái xe mặt trước
+      driver_licence_back:
+        type: string
+        description: Bằng lái xe mặt sau
+      house_hold:
+        type: string
+        description: Hộ khẩu
+  BookingPaper:
+    type: object
+    properties:
+      rental_contract:
+        type: string
+        description: Hợp đồng thuê xe
+      receive_report:
+        type: string
+        description: Biên bản nhận xe
+      return_report:
+        type: string
+        description: Biên bản trả xe
+  Deposit:
+    type: object
+    properties:
+      identity_paper:
+        type: string
+        description: Giấy tờ đặt cọc
+        example: cmnd
+      identity_paper_note:
+        type: string
+        description: Thông tin giấy tờ đặt cọc
+        example: '123456789'
+      identity_paper_returned:
+        type: boolean
+        description: Đã trả
+        default: false
+        example: true
+      motor:
+        type: string
+        description: Hiệu xe, biển số xe máy
+      motor_returned:
+        type: boolean
+        default: false
+        description: Đã trả
+        example: true
+      motor_registration:
+        type: string
+        description: Đăng ký xe máy
+      motor_registration_returned:
+        type: boolean
+        default: false
+        description: Đã trả
+        example: true
+      cash:
+        type: integer
+        description: Số tiền cọc
+      cash_returned:
+        type: boolean
+        default: false
+        description: Đã trả
+        example: true
+      other:
+        type: string
+        description: Thông tin tài sản khác
+      other_returned:
+        type: boolean
+        default: false
+        description: Đã trả
+        example: true
+  OtherCost:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Mã phí phát sinh
+      cost:
+        type: integer
+        description: Số tiền
+      note:
+        type: string
+        description: Ghi chú
+  OperationCost:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Mã phí vận hành
+      cost:
+        type: integer
+        description: Số tiền
+      note:
+        type: string
+        description: Ghi chú
+  UserParams:
+    type: object
+    properties:
+      branch_id:
+        type: array
+        items:
+          type: integer
+          description: Chi nhánh (*)
+      username:
+        type: string
+        description: Tên đăng nhập (*)
+      fullname:
+        type: string
+        description: Họ và tên (*)
+      phone:
+        type: string
+        description: Số điện thoại (*)
+      email:
+        type: string
+        description: Email
+      password:
+        type: string
+        description: Mật khẩu
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID
+      branch_id:
+        type: string
+        description: Chi nhánh
+      username:
+        type: string
+        description: Tên đăng nhập
+      fullname:
+        type: string
+        description: Họ và tên
+      phone:
+        type: string
+        description: Số điện thoại
+      email:
+        type: string
+        description: Email
+  TrustScoreParams:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Tên tiêu chí
+      trust_scores:
+        type: array
+        items:
+          type: object
+          properties:
+            point:
+              type: integer
+              description: Điểm
+              default: 0
+            name:
+              type: string
+              description: Đánh giá
+      note:
+        type: string
+        description: Mô tả
+  TrustScore:
+    allOf:
+      - $ref: '#/definitions/TrustScoreParams'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+  CarDocumentImage:
+    type: object
+    properties:
+      registration_document:
+        type: string
+        description: Đăng ký
+      registration_certificate:
+        type: string
+        description: Đăng kiểm
+      liability_insurance_certificate:
+        type: string
+        description: Bảo hiểm TNDSBB
+      physical_insurance_certificate:
+        type: string
+        description: Bảo hiểm vật chất xe
+      other_document:
+        type: string
+        description: Giấy tờ khác
+  inline_response_200:
+    type: object
+    properties:
+      status:
+        type: string
+    example:
+      status: success

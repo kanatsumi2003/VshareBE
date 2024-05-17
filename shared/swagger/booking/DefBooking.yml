@@ -1,0 +1,21 @@
+allOf:
+  - $ref: '#/definitions/BookingParams'
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 10
+      code:
+        type: string
+        description: Mã đơn
+        example: VSTIOTTL221125001
+      created_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        description: Thời gian tạo
+        example: 2022-12-24T10:00:00+00.00
+      updated_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        description: Thời gian cập nhật gần nhất
+        example: 2022-12-24T10:00:00+00.00

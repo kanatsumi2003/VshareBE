@@ -1,0 +1,28 @@
+get:
+  tags:
+  - "booking"
+  summary: "Xem trước hợp đồng và biên bản giao xe"
+  operationId: "BookingDocument"
+  produces:
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+    description: "ID đơn hàng"
+  - name: "entity"
+    in: "path"
+    required: true
+    type: "string"
+    description: "Loại giấy tờ cần xem"
+    enum: ['contract', 'receive_report']
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "file"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

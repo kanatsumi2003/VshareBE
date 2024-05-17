@@ -1,0 +1,112 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Tên chi nhánh
+    example: Chi nhánh Ocen Park
+  code:
+    type: string
+    description: Mã chi nhánh (cho phép chữ & số)
+    example: VOP
+  province_id:
+    type: integer
+    description: Tỉnh/thành phố
+    example: 1
+  district_id:
+    type: integer
+    description: ID quận huyện
+    example: 1007
+  address:
+    type: string
+    description: Địa chỉ không bao gồm tỉnh thành, quận huyện
+    example: Park 02
+  latlng:
+    type: string
+    description: Tọa độ địa lý
+    example: 21.0244247,105.7938073
+  rental_time_from:
+    type: string
+    description: Giờ cho thuê từ
+    format: HH:mm
+    example: 07:00
+  rental_time_to:
+    type: string
+    description: Giờ cho thuê đến
+    format: HH:mm
+    example: 21:00
+  limit_km:
+    type: integer
+    description: Số km giới hạn/ngày
+    example: 250
+  overkm_fee:
+    type: integer
+    description: Phụ trội km (đ/km)
+    example: 5000
+  overtime_fee:
+    type: integer
+    description: Phụ trội thời gian (đ/giờ)
+    example: 10000
+  free_delivery_km:
+    type: integer
+    description: Số km giao nhận miễn phí (km)
+    example: 10
+  delivery_fee:
+    type: integer
+    description: Phí giao nhận (đ/km)
+    example: 15000
+  procedure:
+    $ref: "#/definitions/Procedure"
+    description: Thủ tục thuê xe
+  holiday_event_price:
+    $ref: "#/definitions/HolidayEventPrice"
+    description: Giá theo ngày lễ (<=100 tính theo %, > 100 tính theo giá fix)
+  week_days_price:
+    $ref: "#/definitions/WeekDaysPrice"
+    description: Giá theo ngày trong tuần (<=100 tính theo %, > 100 tính theo giá fix)
+  active:
+    type: boolean
+    description: Hoạt động
+    default: true
+    example: true
+  agent_name:
+    type: string
+    description: Tên người đại diện
+    example: Nguyễn Văn A
+  agent_phone:
+    type: string
+    description: SDT người đại diện
+    example: 0999999999
+  bank_account_name: 
+    type: string
+    description: Tên chủ tài khoản
+    example: Nguyễn Văn A
+  bank_account_number: 
+    type: string
+    description: Số tài khoản
+    example: '19035651301016'
+  bank_name: 
+    type: string
+    description: Tên ngân hàng
+    example: Teckcombank
+  bank_branch_name: 
+    type: string
+    description: Tên chi nhánh
+    example: CN Hai Bà Trưng
+  tax_number:
+    type: string
+    description: Mã số thuế
+  add_ons:
+    type: array
+    description: Dịch vụ add-on
+    items:
+      $ref: '#/definitions/Addon'
+  location: 
+    type: string
+    description: Vị trí maps
+    example: https://goo.gl/maps/kyhjjT2dseDGRvzY8
+  payment_methods:
+    type: array
+    description: Các phương thức thanh toán sử dụng
+    items:
+      type: string
+      description: Phương thức thanh toán

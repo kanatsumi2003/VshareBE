@@ -1,0 +1,62 @@
+get:
+  tags:
+  - "vehicle-model"
+  summary: "Danh sách hiệu xe"
+  operationId: "VehicleModelList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: "Tên hiệu xe"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: "integer"
+              description: ID 
+            brand_name:
+              type: "string"
+              description: Hãng xe
+            name:
+              type: "string"
+              description: Tên hiệu xe
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "vehicle-model"
+  summary: "Thêm mới hiệu xe"
+  operationId: "VehicleModelCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      brand_id: select
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/VehicleModelParams"
+        - required:
+          - brand_id
+          - name
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

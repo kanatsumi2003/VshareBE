@@ -1,0 +1,69 @@
+get:
+  tags:
+  - "attribute"
+  summary: "Lấy thông tin tính năng"
+  operationId: "AttributeDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Attribute"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "attribute"
+  summary: "Cập nhật thông tin tính năng"
+  operationId: "AttributeEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      icon: file
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/AttributeParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "attribute"
+  summary: "Xóa tính năng"
+  operationId: "AttributeDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

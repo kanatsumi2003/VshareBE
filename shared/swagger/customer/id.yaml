@@ -1,0 +1,67 @@
+get:
+  tags:
+  - "customer"
+  summary: "Lấy thông tin Khách hàng"
+  operationId: "CustomerDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Customer"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+ 
+put:
+  tags:
+  - "customer"
+  summary: "Cập nhật thông tin Khách hàng"
+  operationId: "CustomerEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      birthday: date
+      identity_date: date
+      driver_licence_date: date
+      house_hold_date: date
+      customer_note: textarea
+      approve_note: textarea
+      customer_image_identity_front: file
+      customer_image_identity_back: file
+      customer_image_driver_licence_front: file
+      customer_image_driver_licence_back: file
+      customer_image_house_hold: multi_file
+      customer_image_other_paper: multi_file
+      customer_image_asset_deposit: multi_file
+      verify_identity: select:config
+      verify_driver_licence: select:config
+      verify_house_hold: select:config
+      verify_other_paper: select:config
+      verify_asset_deposit: select:config
+      asset_deposit: select:config
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/CustomerParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

@@ -1,0 +1,116 @@
+get:
+  tags:
+  - "customer"
+  summary: "Danh sách Khách hàng"
+  operationId: "CustomerList"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      profile_status: multi_select:config
+  - in: "query"
+    name: "phone"
+    type: "string"
+    description: "Số điện thoại"
+  - in: "query"
+    name: "fullname"
+    type: "string"
+    description: "Tên khách hàng"
+  - in: "query"
+    name: "email"
+    type: "string"
+    description: "Email"
+  - in: "query"
+    name: bookings
+    type: string
+    description: "Mã đơn hàng"
+  - in: "query"
+    name: number_success_booking
+    type: integer
+    description: "Số lượng đơn hàng thành công"
+  - in: "query"
+    name: profile_status
+    type: integer
+    description: Trạng thái hồ sơ
+  - in: "query"
+    name: address
+    type: string
+    description: Địa chỉ
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: integer
+              description: ID
+            fullname:
+              type: string
+              description: Họ và tên
+            phone:
+              type: string
+              description: Số điện thoại
+            email:
+              type: string
+              description: Email
+            bookings:
+              type: string
+              description: Mã booking
+            number_success_booking:
+              type: string
+              description: Tình trạng
+            address:
+              type: string
+              description: Địa chỉ
+            profile_status:
+              type: integer
+              description: Hồ sơ
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "customer"
+  summary: "Thêm mới khách hàng"
+  operationId: "CustomerCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      deposit_asset: select:config
+      customer_image_identity: file
+      customer_image_driver_licence: file
+      customer_image_house_hold: file
+      customer_image_other_paper: file
+      customer_image_asset_deposit: file
+      verify_status.identity: select:config
+      verify_status.driver_licence: select:config
+      verify_status.house_hold: select:config
+      verify_status.other_paper: select:config
+      verify_status.asset_deposit: select:config
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/CustomerParams"
+        - required:
+          - phone
+          - fullname
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

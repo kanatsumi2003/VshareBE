@@ -1,0 +1,9 @@
+type: object
+properties:
+  task_status:
+    type: string
+    description: Trạng thái
+    enum: ['pending', 'canceled', 'done']
+  user_id:
+    type: integer
+    description: Người thực hiện

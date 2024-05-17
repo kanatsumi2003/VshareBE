@@ -1,0 +1,23 @@
+get:
+  tags:
+  - "customer"
+  summary: "Xuất danh sách khách hàng"
+  operationId: "CustomerExport"
+  parameters:
+  - in: "query"
+    name: "phone"
+    type: "string"
+    description: "Số điện thoại"
+  - in: "query"
+    name: "fullname"
+    type: "string"
+    description: "Tên khách hàng"
+  - in: "query"
+    name: "email"
+    type: "string"
+    description: "Email"
+  responses:
+    200:
+      description: "Success"
+    400:
+      description: "Error"

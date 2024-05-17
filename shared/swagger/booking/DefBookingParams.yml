@@ -1,0 +1,361 @@
+type: object
+properties:
+  source:
+    type: string
+    description: Nguồn
+    example: web
+  vehicle_type:
+    type: string
+    description: Loại xe
+    enum: ["C", "M"]
+  branch_id:
+    type: integer
+    description: Chi nhánh thuê
+    example: 2
+  customer_id:
+    type: integer
+    description: ID Khách hàng
+  fullname:
+    type: string
+    description: Họ và tên (*)
+    example: Nguyễn Văn A
+  phone:
+    type: string
+    description: Số điện thoại (*)
+    example: "0999999999"
+  email:
+    type: string
+    description: Email khách hàng
+    example: nva@gmail.com
+  birthday:
+    type: string
+    format: YYYY-MM-DD
+    description: Ngày sinh khách hàng
+    example: "1990-12-23"
+  identity_number:
+    type: string
+    description: CCCD/CMND/Hộ chiếu khách hàng
+    example: "162112733"
+  identity_date:
+    type: string
+    format: YYYY-MM-DD
+    description: Ngày cấp CCCD/CMND/Hộ chiếu
+    example: "2020-12-23"
+  driver_licence_number:
+    type: string
+    description: Số GPLX
+    example: "162112733"
+  driver_licence_date:
+    type: string
+    format: YYYY-MM-DD
+    description: Ngày cấp GPLX
+    example: "2020-12-23"
+  address:
+    type: string
+    description: Địa chỉ khách hàng
+    example: Park 02 Times City
+  customer_note:
+    type: string
+    description: Ghi chú về khách hàng
+  trust_score:
+    type: integer
+    description: Điểm thẩm định
+    example: 100
+  approve_status:
+    type: integer
+    description: Trạng thái thẩm định
+    example: 1
+  approve_by:
+    type: integer
+    description: Người thẩm định
+    example: 20
+  approve_note:
+    type: string
+    description: Ghi chú thẩm định
+    example: "Khách đủ tiêu chuẩn để thuê xe"
+  estimate_branch_vehicle_id:
+    type: integer
+    description: Xe thuê dự kiến
+    example: 10
+  actual_branch_vehicle_id:
+    type: integer
+    description: Xe giao thực tế
+    example: 10
+  estimate_prepay:
+    type: integer
+    description: Tiền cọc giữ xe tạm tính
+    example: 10000000
+  prepay:
+    type: integer
+    description: Tiền cọc giữ xe
+    example: 10000000
+  estimate_price:
+    type: integer
+    description: Tền thuê tạm tính (chưa gồm phí giao nhận)
+    example: 15200000
+  actual_price:
+    type: integer
+    description: Tiền thuê xe thực tế
+    example: 16020000
+  total_amount:
+    type: integer
+    description: Tổng tiền thuê xe sau KM
+    example: 30000
+  remain_amount:
+    type: integer
+    description: Số tiền cần thanh toán
+    example: 6020000
+  receive_note:
+    type: string
+    description: Ghi chú thêm khi giao xe
+  return_note:
+    type: string
+    description: Ghi chú thêm khi trả xe
+  reason_rental:
+    type: string
+    description: Lý do thuê
+  receive_type:
+    type: string
+    description: Hình thức nhận xe
+    example: home
+  delivery_fee:
+    type: integer
+    description: Phí giao nhận xe
+    example: 100000
+  receive_address:
+    type: string
+    description: Địa chỉ nhận xe
+  estimate_receive_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày nhận dự kiến
+    example: 2022-12-23 10:00
+  estimate_return_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày trả dự kiến
+    example: 2022-12-26 19:00
+  estimate_rental_duration:
+    type: string
+    description: Số ngày thuê dự kiến
+    example: 4d
+  estimate_deposit_paper:
+    type: string
+    description: Giấy tờ định đặt cọc
+  estimate_deposit_asset:
+    type: string
+    description: Tài sản định đặt cọc
+  actual_receive_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày nhận thực tế
+    example: 2022-12-23 10:00
+  actual_return_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày trả thực tế
+    example: 2022-12-26 21:00
+  actual_rental_duration:
+    type: string
+    description: Số ngày thuê thực tế
+    example: 4d
+  contract_receive_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày nhận
+    example: 2022-12-23 10:00
+  contract_return_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày trả
+    example: 2022-12-26 21:00
+  contract_rental_duration:
+    type: string
+    description: Số ngày thuê
+    example: 4d
+  receive_etc_balance:
+    type: integer
+    description: Tài khoản ETC lúc giao
+    example: 1050000
+  return_etc_balance:
+    type: integer
+    description: Tài khoản ETC lúc trả
+    example: 1050000
+  receive_km:
+    type: integer
+    description: Số km lúc nhận xe
+    example: 4000
+  return_km:
+    type: integer
+    description: Số km khi trả xe
+    example: 4800
+  receive_fuel:
+    type: integer
+    description: Nhiên liệu lúc nhận xe (%)
+    example: 100
+  return_fuel:
+    type: integer
+    description: Nhiên liệu lúc trả xe (%)
+    example: 80
+  give_user_id:
+    type: integer
+    description: Người giao xe
+    example: 4
+  return_user_id:
+    type: integer
+    description: Người nhận xe từ khách hàng
+    example: 5
+  saler_id:
+    type: integer
+    description: CSKH
+    example: 25
+  level:
+    type: string
+    description: Từ C3 đến L9
+    example: L9
+  other_costs:
+    type: array
+    description: Các loại phí phát sinh
+    items:
+      $ref: "#/definitions/OtherCost"
+  return_customer_assets:
+    type: boolean
+    description: Đã trả toàn bộ giấy tờ và tài sản đặt cọc
+  hold_customer_note:
+    type: string
+    description: Ghi chú giấy tờ/tài sản còn giữ lại của khách sau khi trả xe
+    example: "Đăng ký xe, tiền cọc 15 triệu"
+  hold_customer_return_date:
+    type: string
+    description: Thời gian dự kiến trả
+    example: "2022-10-10"
+  hold_customer_reason:
+    type: string
+    description: Lý do
+    example: "Chưa trả đủ tiền thuê xe."
+  vehicle_full:
+    type: boolean
+    description: Xe hoạt động bình thường, đầy đủ giấy tờ và đồ dự phòng
+  receive_vehicle_status:
+    type: string
+    description: Tình trạng xe khi giao
+    example: Xe bị tróc sơn ở đuôi xe
+  return_vehicle_same:
+    type: boolean
+    description: Tình trạng xe khi trả giống ban đầu
+  return_vehicle_status:
+    type: string
+    description: Tình trạng xe khi trả
+    example: Xe bị tróc sơn ở đuôi xe
+  payment_method:
+    type: string
+    description: Hình thức thanh toán
+  vat:
+    $ref: "#/definitions/Vat"
+    description: Thông tin hóa đơn
+  deposit:
+    $ref: "#/definitions/Deposit"
+    description: Khách đặt cọc
+  deposit_images:
+    type: array
+    description: Ảnh tài sản đặt cọc
+    items:
+      type: string
+      description: Link file ảnh
+  customer_image:
+    $ref: "#/definitions/CustomerImage"
+    description: Ảnh chụp giấy tờ khách hàng
+  before_car_image:
+    $ref: "#/definitions/CarImage"
+    description: Ảnh góc chụp xe trước khi giao
+  after_car_image:
+    $ref: "#/definitions/CarImage"
+    description: Ảnh góc chụp xe sau khi trả
+  contract_created_by:
+    type: integer
+    description: Người làm hợp đồng
+    example: 10
+  contract_sign_date:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Thời gian làm hợp đồng
+    example: 2022-12-26 21:00
+  estimate_add_ons:
+    type: array
+    description: Dịch vụ add-on dự kiến
+    items:
+      $ref: "#/definitions/AddonPrice"
+      description: Dịch vụ mua thêm
+  add_ons:
+    type: array
+    description: Dịch vụ add-on
+    items:
+      $ref: "#/definitions/AddonPrice"
+      description: Dịch vụ mua thêm
+  booking_paper:
+    $ref: "#/definitions/BookingPaper"
+    description: Các loại hợp đồng, biên bản
+  booking_status:
+    type: integer
+    description: Trạng thái đơn hàng
+    example: 10
+  discount_code:
+    type: string
+    description: Mã khuyến mại
+  estimate_discount_amount:
+    type: integer
+    description: Số tiền khuyến mại tạm tính
+    example: 30000
+  discount_amount:
+    type: integer
+    description: Số tiền khuyến mại
+    example: 30000
+  vat_cost:
+    type: integer
+    description: Thuế VAT
+  operation_costs:
+    type: array
+    description: Các loại phí vận hành trước và trong giao dịch
+    items:
+      $ref: "#/definitions/OperationCost"
+  post_operation_costs:
+    type: array
+    description: Các loại phí vận hành sau giao dịch
+    items:
+      $ref: "#/definitions/OperationCost"
+  final_note:
+    type: string
+    description: "Ghi chú thêm khi kết thúc hợp đồng"
+  estimate_after_discount_amount:
+    type: integer
+    description: Tiền thuê sau khuyến mại
+  estimate_total_addon_amount:
+    type: integer
+    description: Tổng tiền addon tạm tính
+  estimate_total_amount:
+    type: integer
+    description: Tổng tiền thuê xe tạm tính
+  estimate_delivery_fee:
+    type: integer
+    description: Phí giao nhận tạm tính
+  estimate_vat_cost:
+    type: integer
+    description: Vat tạm tính
+  total_addon_amount:
+    type: integer
+    description: Tổng tiền addon
+  liquid_total_addon:
+    type: integer
+    description: Số tiền phát sinh thêm
+  liquid_total_amount:
+    type: integer
+    description: Tổng tiền thuê xe theo hợp đồng
+  liquid_total_amount_after_settlement:
+    type: integer
+    description: Số tiền sau quyết toán
+  liquid_paid_amount:
+    type: integer
+    description: Số tiền đã thanh toán
+  liquid_total_amount_left:
+    type: integer
+    description: Số tiền còn phải thanh toán

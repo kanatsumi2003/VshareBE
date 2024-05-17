@@ -1,0 +1,99 @@
+get:
+  tags:
+  - "vehicle-price"
+  summary: "Danh sách giá xe theo hạng"
+  operationId: "VehiclePriceList"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            branch_name:
+              type: string
+              description: Chi nhánh
+            vehicle_class:
+              type: string
+              description: Hạng xe
+            base_price:
+              type: integer
+              description: Giá ngày thường
+            weekend_price:
+              type: integer
+              description: Giá cuối tuần
+            month_price:
+              type: integer
+              description: Giá tháng
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "vehicle-price"
+  summary: "Thêm mới giá xe theo hạng"
+  operationId: "VehiclePriceCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      branch_id: multi_select
+      vehicle_class: select:config
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      type: object
+      properties:
+        branch_id:
+          type: array
+          description: Chi nhánh
+          items:
+            type: integer
+        vehicle_class:
+          type: string
+          description: Hạng xe
+          example: SUV
+        base_price:
+          type: integer
+          description: Giá ngày thường
+          example: 100000
+        weekend_price:
+          type: integer
+          description: Giá ngày cuối tuần
+          example: 110000
+        month_price:
+          type: integer
+          description: Giá thuê tháng
+          example: 18000000
+        customer_day_price_rules:
+          type: "array"
+          items:
+            allOf:
+              - $ref: '#/definitions/CustomerDayPriceRule'
+              - required:
+                - day_count_from
+                - day_count_to
+                - price
+      required:
+        - vehicle_class
+        - base_price
+        - weekend_price
+        - month_price
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

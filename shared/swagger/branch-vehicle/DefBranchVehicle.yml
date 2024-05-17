@@ -1,0 +1,26 @@
+allOf:
+  - $ref: '#/definitions/BranchVehicleParams'
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 10
+      name:
+        type: string
+        description: Tên xe
+      created_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        example: 2022-12-24T10:00:00+00.00
+      updated_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        example: 2022-12-24T10:00:00+00.00
+      attributes:
+        type: "array"
+        items:
+          $ref: "#/definitions/Attribute"
+      customer_day_price_rules:
+        type: "array"
+        items:
+          $ref: '#/definitions/CustomerDayPriceRule'

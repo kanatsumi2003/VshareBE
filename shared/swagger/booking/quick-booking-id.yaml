@@ -1,0 +1,42 @@
+put:
+  tags:
+  - "booking"
+  summary: "Thêm đơn hàng từ lịch xe (unavaiable)"
+  operationId: "QuickBooking"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      estimate_branch_vehicle_id: select
+      estimate_receive_datetime: datetime
+      estimate_return_datetime: datetime
+      booked_status: select:config
+      level: select:config
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/QuickBookingParams"
+      required:
+        - fullname
+        - phone
+        - estimate_branch_vehicle_id
+        - estimate_receive_datetime
+        - estimate_return_datetime
+        - level
+        - booked_status
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Booking"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

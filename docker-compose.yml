@@ -1,0 +1,9 @@
+version: '3'
+services:
+  vshare_api:
+    image: registry.gitlab.com/phanthanh/vshare_api:main
+    container_name: vshare_api
+    ports:
+      - 8800:8800
+    restart: always
+    command: npm run dev

@@ -1,0 +1,82 @@
+get:
+  tags:
+    - "owner-contract"
+  summary: "Lấy thông tin hợp đồng"
+  operationId: "OwnerContractDetail"
+  parameters:
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/OwnerContractDetail"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+put:
+  tags:
+    - "owner-contract"
+  summary: "Cập nhật thông tin hợp đồng"
+  operationId: "OwnerContractEdit"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        contract_sign_date: date
+        branch_vehicle_id: select
+        owner_id: select
+        contract_created_by: select
+        rental_type: select:config
+        reconciliation: select:config
+        has_maintain: check
+        has_insurance: check
+        rental_from_date: date
+        rental_to_date: date
+        contract_paper.owner_contract: file
+        contract_paper.delivery_report: file
+        contract_note: textarea
+        contract_images: multi_file
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+    - in: "body"
+      name: "body"
+      required: true
+      schema:
+        $ref: "#/definitions/OwnerContractParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+    - "owner-contract"
+  summary: "Xóa hợp đồng"
+  operationId: "OwnerContractDelete"
+  parameters:
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

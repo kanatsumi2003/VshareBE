@@ -1,0 +1,57 @@
+type: object
+properties:
+  id:
+    type: integer
+    description: ID
+    example: 10
+  vehicle_name:
+    type: string
+    description: Tên xe
+    example: 29B-76221 Toyota Vios Nâu
+  owner_name:
+    type: integer
+    description: Chủ xe
+    example: Đào Ngọc Minh
+  branch_id:
+    type: string
+    description: Chi nhánh
+    example: Ocen Park
+  rental_type:
+    type: string
+    description: Loại thuê
+  owner_day_price:
+    type: integer
+    description: Giá ngày
+    example: 600000
+  owner_month_price:
+    type: integer
+    description: Giá tháng
+    example: 18000000
+  owner_pin_price:
+    type: integer
+    description: Thuê pin
+    example: 1800000
+  has_insurance:
+    type: boolean
+    description: Bảo hiểm
+    example: false
+  has_maintain:
+    type: boolean
+    description: Bảo trì
+    example: true
+  current_km:
+    type: integer
+    description: Km lúc nhận xe
+    example: 27003
+  owner_month_km_limit:
+    type: integer
+    description: Giới hạn km
+    example: 60000
+  owner_overkm_price:
+    type: integer
+    description: Vượt km
+    example: 15000
+  contract_link:
+    type: string
+    description: Hợp đồng
+    example: https://example.com/owner_contract.docx

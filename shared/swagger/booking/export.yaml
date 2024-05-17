@@ -1,0 +1,61 @@
+get:
+  tags: 
+  - "booking"
+  summary: "Xuất danh sách đơn hàng"
+  operationId: "BookingExport"
+  parameters:
+  - in: "query"
+    name: "code"
+    type: "string"
+    description: Mã đơn hàng
+  - in: "query"
+    name: "phone"
+    type: "string"
+    description: "Số điện thoại"
+  - in: "query"
+    name: "fullname"
+    type: "string"
+    description: "Tên khách hàng"
+  - in: "query"
+    name: "level"
+    type: "string"
+  - in: "query"
+    name: "booking_status"
+    type: "integer"
+  - in: "query"
+    name: "estimate_branch_vehicle_id"
+    type: "integer"
+    description: Xe giao dự kiến
+  - in: "query"
+    name: "actual_branch_vehicle_id"
+    type: "integer"
+    description: Xe giao thực tế
+  - in: "query"
+    name: "source"
+    type: "string"
+    description: "Nguồn"
+  - in: "query"
+    name: "receive_datetime_from"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày nhận từ
+  - in: "query"
+    name: "receive_datetime_to"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày nhận đến
+  - in: "query"
+    name: "return_datetime_from"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày trả từ
+  - in: "query"
+    name: "return_datetime_to"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày trả đến
+  responses:
+    200:
+      description: "Success"
+    400:
+      description: "Error"

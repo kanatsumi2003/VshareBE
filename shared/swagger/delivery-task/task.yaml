@@ -1,0 +1,74 @@
+get:
+  tags:
+  - "delivery-task"
+  summary: "Danh sách giao nhận"
+  operationId: "DeliveryTaskList"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      from_date: date
+      to_date: date
+      task_type: select:config
+      task_status: multi_select:config
+      user_id: select
+      branch_id: select
+  - in: "query"
+    name: "booking_code"
+    type: "string"
+    description: Mã đơn hàng
+  - in: "query"
+    name: "phone"
+    type: "string"
+    description: "Số điện thoại"
+  - in: "query"
+    name: "fullname"
+    type: "string"
+    description: "Tên khách hàng"
+  - in: "query"
+    name: "email"
+    type: "string"
+    description: Email
+  - in: "query"
+    name: "task_status"
+    type: "string"
+    enum: ['pending', 'canceled', 'done']
+    description: Trạng thái công việc
+  - in: "query"
+    name: "branch_id"
+    type: "integer"
+    description: Chi nhánh
+  - in: "query"
+    name: "user_id"
+    type: "integer"
+    description: Người thực hiện
+  - in: "query"
+    name: "task_type"
+    type: "string"
+    description: "Công việc"
+    enum: ['receive', 'return']
+  - in: "query"
+    name: "from_date"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày thực hiện từ
+  - in: "query"
+    name: "to_date"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày thực hiện đến
+  - in: "query"
+    name: "vehicle_name"
+    type: "string"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/DeliveryTask"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

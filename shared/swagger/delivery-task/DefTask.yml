@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: integer
+    description: ID
+    example: 1
+  vehicle_image:
+    type: string
+    description: Ảnh xe
+  vehicle_name:
+    type: string
+    description: Tên xe
+    example: 30F-22028 Toyota Vios 1.5 số Sàn Trắng
+  task_type:
+    type: string
+    description: Công việc
+    example: 'Nhận xe'
+  do_at:
+    type: string
+    description: Thời gian thực hiện
+    format: DD/MM/YYYY HH:mm
+    example: 24/01/2023 11:00
+  booking_code:
+    type: string
+    description: Mã đơn hàng
+    example: VOPOTTL230611001
+  fullname:
+    type: string
+    description: Họ và tên
+    example: Nguyễn Văn A
+  phone:
+    type: string
+    description: Số điện thoại
+    example: 0999999999
+  email:
+    type: string
+    description: Email
+    example: example@gmail.com
+  task_status:
+    type: string
+    description: Trạng thái
+    enum: ['pending', 'canceled', 'done']
+  user_id:
+    type: string
+    description: Người thực hiện

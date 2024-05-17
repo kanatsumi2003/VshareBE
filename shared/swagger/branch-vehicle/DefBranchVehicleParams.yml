@@ -1,0 +1,156 @@
+type: object
+properties:
+  vehicle_id:
+    type: integer
+    description: Kho xe (*)
+    example: 1
+  branch_id:
+    type: integer
+    description: Chi nhánh (*)
+    example: 2
+  owner_id:
+    type: integer
+    description: Chủ xe
+    example: 1
+  license_number:
+    type: string
+    description: Biển kiểm soát (*)
+    example: '30K1-15112'
+  vehicle_color:
+    type: string
+    description: Màu sắc
+    example: Trắng
+  manufacture_year:
+    type: integer
+    description: Năm sản xuất
+    example: 2020
+  rental_type:
+    type: string
+    description: Hình thức cho thuê
+    enum: ['A', 'D', 'M']
+    default: A
+    example: D
+  owner_day_price:
+    type: integer
+    description: Chi phí phải trả theo ngày (owner)
+    example: 100000
+  owner_month_price:
+    type: integer
+    description: Chi phí phải trả theo tháng (owner)
+    example: 10000000
+  owner_month_km_limit:
+    type: integer
+    description: Số km giới hạn/tháng (owner)
+    example: 3000
+  owner_overkm_price:
+    type: integer
+    description: Phí vượt km (owner)
+    example: 10000
+  customer_base_price:
+    type: integer
+    description: Giá cho khách thuê ngày thường (*)
+    example: 600000
+  customer_weekend_price:
+    type: integer
+    description: Giá thuê xe ngày cuối tuần (*)
+    example: 700000
+  customer_month_price:
+    type: integer
+    description: Giá cho khách thuê theo tháng
+    example: 18000000
+  customer_month_km_limit:
+    type: integer
+    description: Giới hạn km/tháng cho khách
+    example: 2000
+  customer_day_km_limit:
+    type: integer
+    description: Giới hạn km/ngày cho khách (*)
+    example: 2000
+  customer_overkm_price:
+    type: integer
+    description: Phí vượt km (*)
+    example: 5000
+  customer_overtime_price:
+    type: integer
+    description: Phí quá giờ (*)
+    example: 10000
+  position_company:
+    type: string
+    description: Tên công ty định vị
+  position_username:
+    type: string
+    description: Tên đăng nhập tk định vị
+  position_password:
+    type: string
+    description: Mật khẩu tk định vị
+  has_maintain:
+    type: boolean
+    description: Bảo dưỡng
+    example: true
+  has_insurance:
+    type: boolean
+    description: Bảo hiểm
+    example: true
+  insurance_brand:
+    type: string
+    description: Hãng bảo hiểm
+  insurance_phone:
+    type: string
+    description: Số điện thoại bảo hiểm
+  insurance_expire_date:
+    type: string
+    format: YYYY-MM-DD
+    description: Ngày hết hạn bảo hiểm
+    example: '2023-10-10'
+  etc_username:
+    type: string
+    description: Tài khoản ETC
+  etc_password:
+    type: string
+    description: Mật khẩu ETC
+  etc_balance:
+    type: integer
+    description: Số dư tài khoản ETC
+  registry_date:
+    type: string
+    format: YYYY-MM-DD
+    description: Ngày đăng kiểm
+    example: '2021-10-10'
+  current_km:
+    type: integer
+    description: Số km khi nhận từ chủ xe
+    example: 54211
+  attributes:
+    type: "array"
+    description: Tính năng xe
+    items:
+      type: "integer"
+      description: ID tính năng xe
+    example: [1]
+  customer_day_price_rules:
+    type: "array"
+    items:
+      allOf:
+        - $ref: '#/definitions/CustomerDayPriceRule'
+        - required:
+          - day_count_from
+          - day_count_to
+          - price
+  car_image:
+    $ref: '#/definitions/CarImage'
+    description: Ảnh các góc chụp xe
+  latest_car_image:
+    $ref: '#/definitions/CarImage'
+    description: Ảnh các góc chụp xe hiện tại
+  latest_km:
+    type: integer
+    description: Số km hiện tại
+  latest_fuel:
+    type: integer
+    description: Nhiên liệu hiện tại (%)
+  car_document_image:
+    $ref: '#/definitions/CarDocumentImage'
+    description: Ảnh các giấy tờ xe
+  active:
+    type: boolean
+    description: Trạng thái hoạt động

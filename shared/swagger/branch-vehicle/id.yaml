@@ -1,0 +1,105 @@
+get:
+  tags:
+  - "branch-vehicle"
+  summary: "Lấy thông tin xe chi nhánh"
+  operationId: "BranchVehicleDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/BranchVehicle"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "branch-vehicle"
+  summary: "Cập nhật thông tin xe chi nhánh"
+  operationId: "BranchVehicleEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      vehicle_id: select
+      branch_id: select
+      owner_id: select
+      rental_type: select:config
+      has_maintain: check
+      has_insurance: check
+      attributes: multi_select
+      insurance_expire_date: date
+      registry_date: date
+      car_image.car_front: file
+      car_image.car_back: file
+      car_image.car_left: file
+      car_image.car_right: file
+      car_image.car_interior: file
+      car_image.fuel_gauge: file
+      car_image.car_video: file
+      latest_car_image.car_front: file
+      latest_car_image.car_back: file
+      latest_car_image.car_left: file
+      latest_car_image.car_right: file
+      latest_car_image.car_interior: file
+      latest_car_image.fuel_gauge: file
+      latest_car_image.car_video: file
+      car_document_image.registration_document: file
+      car_document_image.registration_certificate: file
+      car_document_image.liability_insurance_certificate: file
+      car_document_image.physical_insurance_certificate: file
+      car_document_image.other_document: file
+      active: check
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/BranchVehicleParams"
+        - type: object
+          properties:
+            attributes:
+              type: "array"
+              items:
+                type: "integer"
+                description: "ID tính năng xe chi nhánh"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "branch-vehicle"
+  summary: "Xóa xe chi nhánh"
+  operationId: "BranchVehicleDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

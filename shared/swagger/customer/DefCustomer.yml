@@ -1,0 +1,15 @@
+allOf:
+  - $ref: "#/definitions/CustomerParams"
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 10
+      created_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        example: 2022-12-24T10:00:00+00.00
+      updated_at:
+        type: string
+        format: YYYY-MM-DDTHH:mm:ssz
+        example: 2022-12-24T10:00:00+00.00

@@ -1,0 +1,74 @@
+type: "object"
+properties:
+  status:
+    type: "string"
+  data:
+    type: "object"
+    properties:
+      minDate:
+        type: string
+        description: Giới hạn ngày tìm kiếm nhỏ nhất
+        example: "2022-10-20"
+      maxDate:
+        type: string
+        description: Giới hạn ngày tìm kiếm lớn nhất
+        example: "2022-10-22"
+      totalDays:
+        type: integer
+        description: Tổng số ngày trong khoảng tìm kiếm
+        example: 3
+      listDays:
+        type: array
+        description: Danh sách ngày trong khoảng tìm kiếm
+        items:
+          type: string
+          example: "2022-10-20"
+      weekends:
+        type: array
+        description: Danh sách các ngày cuối tuần
+        items:
+          type: string
+          example: "2022-10-21"
+      branchVehicles:
+        type: array
+        description: Danh sách xe
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID xe chi nhánh
+              example: 1
+            name: 
+              type: string
+              description: Tên xe
+              example: "30F-22028 Toyota Vios 1.5 số Tự động Đen"
+            customer_base_price:
+              type: integer
+              description: Giá ngày thường
+              example: 600000
+            customer_weekend_price:
+              type: integer
+              description: Giá cuối tuần
+              example: 800000
+            vehicle.image:
+              type: string
+              description: Link ảnh đại diện của xe
+              example: "http://localhost:8800/uploads/vios-nau-vang20230317145046.png"
+      data:
+        type: object
+        description: Danh sách xe
+        properties:
+          pending:
+            type: array
+            items:
+              $ref: "#/definitions/DeliveryScheduleItem"
+          received:
+            type: array
+            items:
+              $ref: "#/definitions/DeliveryScheduleItem"
+          returned:
+            type: array
+            items:
+              $ref: "#/definitions/DeliveryScheduleItem"
+          

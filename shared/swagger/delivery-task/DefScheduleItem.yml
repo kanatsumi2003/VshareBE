@@ -1,0 +1,60 @@
+type: "object"
+properties:
+  id:
+    type: integer
+    description: ID xe chi nhánh
+    example: 1
+  vehicle_name: 
+    type: string
+    description: Tên xe
+    example: "30F-22028 Toyota Vios 1.5 số Tự động Đen"
+  customer_base_price:
+    type: integer
+    description: Giá ngày thường
+    example: 600000
+  customer_weekend_price:
+    type: integer
+    description: Giá cuối tuần
+    example: 800000
+  vehicle_image:
+    type: string
+    description: Link ảnh đại diện của xe
+    example: "http://localhost:8800/uploads/vios-nau-vang20230317145046.png"
+  items:
+    type: array
+    items:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ngày giao
+          example: "2022-10-20T01:00:00.000Z"
+        to:
+          type: string
+          description: Ngày trả
+          example: "2022-10-22T03:00:00.000Z"
+        from_time:
+          type: string
+          description: Giờ giao xe
+          example: "8:00"
+        to_time:
+          type: string
+          description: Giờ trả xe
+          example: "10:00"
+        delivery_status:
+          type: string
+          description: Trạng thái giao nhận
+          enum: ['pending', 'received', 'returned']
+        booking_id:
+          type: integer
+          description: ID booking
+          example: 1
+        booking_code:
+          type: string
+          description: Mã đơn hàng
+        fullname:
+          type: string
+          description: Tên khách hàng
+        note:
+          type: string
+          description: Ghi chú

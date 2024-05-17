@@ -1,0 +1,248 @@
+get:
+  tags:
+    - "booking"
+  summary: "Danh sách đơn đặt xe"
+  operationId: "BookingList"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        receive_datetime_from: date
+        receive_datetime_to: date
+        return_datetime_from: date
+        return_datetime_to: date
+        booking_status: multi_select:config
+        level: multi_select:config
+        source: select:config
+        estimate_branch_vehicle_id: select
+        actual_branch_vehicle_id: select
+        branch_id: select
+    - in: "query"
+      name: "code"
+      type: "string"
+      description: Mã đơn hàng
+    - in: "query"
+      name: "phone"
+      type: "string"
+      description: "Số điện thoại"
+    - in: "query"
+      name: "email"
+      type: "string"
+      description: "Email"
+    - in: "query"
+      name: "fullname"
+      type: "string"
+      description: "Tên khách hàng"
+    - in: "query"
+      name: "level"
+      type: "string"
+    - in: "query"
+      name: "booking_status"
+      type: "integer"
+    - in: "query"
+      name: "branch_id"
+      type: "integer"
+      description: Chi nhánh
+    - in: "query"
+      name: "estimate_branch_vehicle_id"
+      type: "integer"
+      description: Xe giao dự kiến
+    - in: "query"
+      name: "actual_branch_vehicle_id"
+      type: "integer"
+      description: Xe giao thực tế
+    - in: "query"
+      name: "source"
+      type: "string"
+      description: "Nguồn"
+    - in: "query"
+      name: "receive_datetime_from"
+      type: "string"
+      format: "YYYY-MM-DD"
+      description: Ngày nhận từ
+    - in: "query"
+      name: "receive_datetime_to"
+      type: "string"
+      format: "YYYY-MM-DD"
+      description: Ngày nhận đến
+    - in: "query"
+      name: "return_datetime_from"
+      type: "string"
+      format: "YYYY-MM-DD"
+      description: Ngày trả từ
+    - in: "query"
+      name: "return_datetime_to"
+      type: "string"
+      format: "YYYY-MM-DD"
+      description: Ngày trả đến
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            code:
+              type: string
+              description: Mã đơn
+            branch_id:
+              type: string
+              description: Chi nhánh
+            fullname:
+              type: string
+              description: Khách hàng
+            phone:
+              type: string
+              description: Số điện thoại
+            email:
+              type: string
+              description: Email
+            estimate_branch_vehicle_id:
+              type: string
+              description: Xe thuê dự kiến
+            actual_branch_vehicle_id:
+              type: string
+              description: Xe thuê thực tế
+            price:
+              type: string
+              description: Giá thuê DK/TT
+            receive_datetime:
+              type: string
+              description: Nhận xe DK/TT
+            return_datetime:
+              type: string
+              description: Trả xe DK/TT
+            rental_duration:
+              type: string
+              description: Ngày thuê DK/TT
+            source:
+              type: string
+              description: Nguồn
+            level:
+              type: string
+              description: Level
+            booking_status:
+              type: integer
+              description: Trạng thái
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+    - "booking"
+  summary: "Thêm mới đơn đặt xe"
+  operationId: "BookingCreate"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        source: select:config
+        vehicle_type: select:config
+        branch_id: select
+        estimate_branch_vehicle_id: select
+        actual_branch_vehicle_id: select
+        receive_type: select:config
+        give_user_id: select
+        return_user_id: select
+        saler_id: select
+        approve_by: select
+        approve_status: select:config
+        level: select:config
+        payment_method: select:config
+        receive_note: textarea
+        return_note: textarea
+        reason_rental: textarea
+        approve_note: textarea
+        identity_date: date
+        driver_licence_date: date
+        estimate_receive_datetime: datetime
+        estimate_return_datetime: datetime
+        contract_receive_datetime: datetime
+        contract_return_datetime: datetime
+        actual_receive_datetime: datetime
+        actual_return_datetime: datetime
+        estimate_deposit_paper: select:config
+        estimate_deposit_asset: select:config
+        deposit.identity_paper: select:config
+        deposit.identity_paper_returned: check
+        deposit.motor_returned: check
+        deposit.motor_registration_returned: check
+        deposit.cash_returned: check
+        customer_image.identity_front: file
+        customer_image.identity_back: file
+        customer_image.driver_licence_front: file
+        customer_image.driver_licence_back: file
+        customer_image.house_hold: file
+        before_car_image.car_front: file
+        before_car_image.car_back: file
+        before_car_image.car_left: file
+        before_car_image.car_right: file
+        before_car_image.car_interior: file
+        before_car_image.fuel_gauge: file
+        before_car_image.car_video: file
+        after_car_image.car_front: file
+        after_car_image.car_back: file
+        after_car_image.car_left: file
+        after_car_image.car_right: file
+        after_car_image.car_interior: file
+        after_car_image.fuel_gauge: file
+        after_car_image.car_video: file
+        booking_paper.rental_contract: file
+        booking_paper.receive_report: file
+        booking_paper.return_report: file
+        contract_created_by: select
+        contract_sign_date: datetime
+        return_customer_assets: check
+        hold_customer_note: textarea
+        hold_customer_reason: textarea
+        hold_customer_return_date: date
+        receive_vehicle_status: textarea
+        return_vehicle_status: textarea
+        other_costs: select:config
+        customer_note: textarea
+        birthday: date
+        booking_status: select:config
+        vehicle_full: check
+        return_vehicle_same: check
+        estimate_add_ons: select:config
+        add_ons: select:config
+        car_document_image.registration_document: file
+        car_document_image.registration_certificate: file
+        car_document_image.liability_insurance_certificate: file
+        car_document_image.physical_insurance_certificate: file
+        car_document_image.other_document: file
+        operation_costs.code: select:config
+        post_operation_costs.code: select:config
+        final_note: textarea
+    - in: "body"
+      name: "body"
+      required: true
+      schema:
+        allOf:
+          - $ref: "#/definitions/BookingParams"
+          - required:
+              - source
+              - vehicle_type
+              - fullname
+              - phone
+              - estimate_branch_vehicle_id
+              - estimate_price
+              - receive_type
+
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

@@ -1,0 +1,60 @@
+get:
+  tags:
+  - "district"
+  summary: "Danh sách quận huyện"
+  operationId: "DistrictList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: Tên quận huyện
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: "integer"
+              description: ID 
+            name:
+              type: "string"
+              description: Tên quận huyện
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "district"
+  summary: "Thêm mới quận huyện"
+  operationId: "DistrictCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      province_id: select
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/DistrictParams"
+        - required:
+          - province_id
+          - name
+          - code
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

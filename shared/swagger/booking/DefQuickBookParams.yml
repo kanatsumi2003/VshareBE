@@ -1,0 +1,32 @@
+type: object
+properties:
+  fullname:
+    type: string
+    description: Họ và tên
+    example: Nguyễn Văn A
+  phone:
+    type: string
+    description: Số điện thoại
+    example: "0999999999"
+  estimate_branch_vehicle_id:
+    type: integer
+    description: Xe thuê dự kiến
+    example: 10
+  estimate_receive_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày nhận dự kiến
+    example: 2022-12-23 10:00
+  estimate_return_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày trả dự kiến
+    example: 2022-12-26 19:00 
+  booked_status:
+    type: string
+    description: Trạng thái đặt
+    example: 'hold'
+  level:
+    type: string
+    description: Level
+    example: L4

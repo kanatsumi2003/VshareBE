@@ -1,0 +1,81 @@
+get:
+  tags:
+  - "branch"
+  summary: "Lấy thông tin chi nhánh"
+  operationId: "BranchDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Branch"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "branch"
+  summary: "Cập nhật thông tin chi nhánh"
+  operationId: "BranchEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      province_id: select
+      district_id: select
+      active: check
+      rental_time_from: time
+      rental_time_to: time
+      procedure.identity: select:config
+      procedure.household: select:config
+      procedure.driver_licence: select:config
+      procedure.deposit: select:config
+      procedure.labor_contract: select:config
+      procedure.other: select:config
+      add_ons: select:config
+      payment_methods: multi_select:config
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/BranchParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "branch"
+  summary: "Xóa chi nhánh"
+  operationId: "BranchDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

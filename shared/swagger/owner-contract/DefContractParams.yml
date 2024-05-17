@@ -1,0 +1,89 @@
+type: object
+properties:
+  contract_sign_date:
+    type: string
+    description: Thời gian làm hợp đồng
+    format: YYYY-MM-DD HH:mm
+    example: 2022-12-24 10:00
+  contract_created_by:
+    type: integer
+    description: Người làm hợp đồng
+    example: 10
+  contract_duration_month:
+    type: integer
+    description: Thời hạn hợp đồng (tháng)
+    example: 12
+  owner_id:
+    type: integer
+    description: Chủ xe (*)
+    example: 15
+  branch_vehicle_id:
+    type: integer
+    description: Xe chi nhánh (*)
+    example: 15
+  rental_from_date:
+    type: string
+    description: Ngày thuê từ
+    format: YYYY-MM-DD HH:mm
+    example: 2022-12-24 10:00
+  rental_to_date:
+    type: string
+    description: Ngày thuê đến
+    format: YYYY-MM-DD HH:mm
+    example: 2022-12-24 10:00
+  reconciliation:
+    type: string
+    description: Ngày đối soát
+    enum: ['early', 'middle', 'late', 'ppt']
+    example: middle
+  rental_type:
+    type: string
+    description: Hình thức hợp đồng
+    enum: ['M', 'D']
+    example: D
+  revenue_rate:
+    type: number
+    description: Tỉ lệ chia sẻ
+    example: 50
+  contract_paper:
+    $ref: "#/definitions/OwnerContractPaper"
+  contract_images:
+    type: array
+    description: Danh sách ảnh
+    items:
+      type: string
+  owner_day_price:
+    type: integer
+    description: Giá ngày
+    example: 600000
+  owner_month_price:
+    type: integer
+    description: Giá tháng
+    example: 18000000
+  owner_month_km_limit:
+    type: integer
+    description: Giới hạn km
+    example: 60000
+  owner_overkm_price:
+    type: integer
+    description: Giá vượt km
+    example: 15000
+  owner_pin_price:
+    type: integer
+    description: Giá thuê pin
+    example: 1800000
+  has_maintain:
+    type: boolean
+    description: Bảo trì
+    example: false
+  has_insurance:
+    type: boolean
+    description: Bảo hiểm
+    example: true
+  current_km:
+    type: integer
+    description: Km lúc nhận xe
+    example: 27003
+  contract_note:
+    type: string
+    description: Ghi chú hợp đồng

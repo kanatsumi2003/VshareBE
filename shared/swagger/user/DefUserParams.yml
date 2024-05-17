@@ -1,0 +1,22 @@
+type: "object"
+properties:
+  branch_id:
+    type: array
+    items:
+      type: integer
+      description: Chi nhánh (*)
+  username:
+    type: "string"
+    description: Tên đăng nhập (*)
+  fullname:
+    type: "string"
+    description: Họ và tên (*)
+  phone:
+    type: "string"
+    description: Số điện thoại (*)
+  email:
+    type: "string"
+    description: Email
+  password:
+    type: string
+    description: Mật khẩu

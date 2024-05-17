@@ -1,0 +1,128 @@
+swagger: "2.0"
+info:
+  description: Hệ thống luồng dữ liệu Vshare
+  version: "1.0.0"
+  title: "Vshare"
+host: "localhost:8800"
+basePath: "/api/v1"
+tags:
+- name: province
+  description: Quản lý Tỉnh thành
+- name: district
+  description: Quản lý Quận huyện
+- name: vehicle-brand
+  description: Quản lý Hãng xe
+- name: vehicle-model
+  description: Quản lý Hiệu xe
+- name: vehicle
+  description: Quản lý Kho xe
+- name: attribute
+  description: Quản lý Các tính năng của xe
+- name: branch-vehicle
+  description: Quản lý Xe chi nhánh
+- name: vehicle-price
+  description: Cấu hình giá xe theo hạng
+- name: customer
+  description: Quản lý Khách hàng
+- name: booking
+  description: Quản lý Đơn đặt xe
+- name: upload
+  description: Upload file
+- name: user
+  description: Quản lý Người dùng
+- name: trust-score
+  description: Quản lý điểm tín dụng
+- name: booking-schedule
+  description: Quản lý lịch xe
+- name: delivery-task
+  description: Quản lý giao nhận
+- name: owner-contract
+  description: Quản lý hợp đồng
+schemes:
+- "http"
+paths:
+  /customers:
+    $ref: customer/customer.yaml
+  /customers/{id}:
+    $ref: customer/id.yaml
+  /customers/{id}/bookings:
+    $ref: customer/bookings.yaml
+  /provinces:
+    $ref: province/province.yaml
+  /provinces/{id}:
+    $ref: province/id.yaml
+  /districts:
+    $ref: district/district.yaml
+  /districts/{id}:
+    $ref: district/id.yaml
+  /vehicle-brands:
+    $ref: vehicle-brand/brand.yaml
+  /vehicle-brands/{id}:
+    $ref: vehicle-brand/id.yaml
+  /vehicle-models:
+    $ref: vehicle-model/model.yaml
+  /vehicle-models/{id}:
+    $ref: vehicle-model/id.yaml
+  /attributes:
+    $ref: attribute/attribute.yaml
+  /attributes/{id}:
+    $ref: attribute/id.yaml
+  /vehicles:
+    $ref: vehicle/vehicle.yaml
+  /vehicles/{id}:
+    $ref: vehicle/id.yaml
+  /branchs:
+    $ref: branch/branch.yaml
+  /branchs/{id}:
+    $ref: branch/id.yaml
+  /branch-vehicles:
+    $ref: branch-vehicle/vehicle.yaml
+  /branch-vehicles/{id}:
+    $ref: branch-vehicle/id.yaml
+  /vehicle-prices:
+    $ref: vehicle-price/price.yaml
+  /vehicle-prices/{id}:
+    $ref: vehicle-price/id.yaml
+  /bookings:
+    $ref: booking/booking.yaml
+  /bookings/{id}:
+    $ref: booking/id.yaml
+  /bookings/{id}/document-preview/{entity}:
+    $ref: booking/document.yaml
+  /uploads:
+    $ref: upload/upload.yaml
+  /exports/booking-list:
+    $ref: booking/export.yaml
+  /exports/customer-list:
+    $ref: customer/export.yaml
+  /bookings/quick-booking:
+    $ref: booking/quick-booking.yaml
+  /bookings/quick-booking/{id}:
+    $ref: booking/quick-booking-id.yaml
+  /users:
+    $ref: user/user.yaml
+  /users/{id}:
+    $ref: user/id.yaml
+  /trust-scores:
+    $ref: trust-score/score.yaml
+  /trust-scores/{id}:
+    $ref: trust-score/id.yaml
+  /booked-schedules:
+    $ref: booking-schedule/schedule.yaml
+  /delivery-tasks:
+    $ref: delivery-task/task.yaml
+  /delivery-tasks/{id}:
+    $ref: delivery-task/id.yaml
+  /delivery-tasks/schedules:
+    $ref: delivery-task/schedule.yaml
+  /delivery-tasks/booking/{id}:
+    $ref: delivery-task/delivery-id.yaml
+  /delivery-tasks/booking:
+    $ref: delivery-task/delivery.yaml
+  /owner-contracts:
+    $ref: owner-contract/contract.yaml
+  /owner-contracts/{id}:
+    $ref: owner-contract/id.yaml
+
+definitions:
+  $ref: './definitions.yml'

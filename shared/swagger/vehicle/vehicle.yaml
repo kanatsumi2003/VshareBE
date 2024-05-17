@@ -1,0 +1,92 @@
+get:
+  tags:
+  - "vehicle"
+  summary: "Danh sách kho xe"
+  operationId: "VehicleList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: "Tên xe"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            vehicle_type:
+              type: "string"
+              description: Loại xe
+            name:
+              type: "integer"
+              description: Tên xe
+            vehicle_class:
+              type: "string"
+              description: Hạng xe
+            version:
+              type: "string"
+              description: Phiên bản xe
+            seats:
+              type: "integer"
+              description: Số chỗ ngồi
+            transmission:
+              type: "string"
+              description: Truyền động
+            fuel:
+              type: "string"
+              description: Nhiên liệu
+            fuel_consumption:
+              type: "string"
+              description: Mức tiêu thụ
+            style:
+              type: "string"
+              description: Kiểu dáng
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "vehicle"
+  summary: "Thêm mới xe"
+  operationId: "VehicleCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      vehicle_type: select:config
+      brand_id: select
+      model_id: select
+      vehicle_class: select:config
+      transmission: select:config
+      fuel: select:config
+      style: select:config
+      attributes: multi_select
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/VehicleParams"
+        - required:
+          - vehicle_type
+          - brand_id
+          - model_id
+          - version
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

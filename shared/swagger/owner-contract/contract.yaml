@@ -1,0 +1,82 @@
+get:
+  tags:
+    - "owner-contract"
+  summary: "Danh sách hợp đồng"
+  operationId: "OwnerContractList"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        branch_id: select
+        rental_type: select:config
+    - in: "query"
+      name: "vehicle_name"
+      type: "string"
+      description: "Tên xe"
+    - in: "query"
+      name: "branch_id"
+      type: integer
+      description: "Chi nhánh"
+    - in: "query"
+      name: "owner_name"
+      type: "string"
+      description: "Chủ xe"
+    - in: "query"
+      name: "rental_type"
+      type: "string"
+      description: "Loại thuê"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          $ref: "#/definitions/OwnerContractItem"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+    - "owner-contract"
+  summary: "Thêm mới hợp đồng"
+  operationId: "OwnerContractCreate"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        contract_sign_date: date
+        branch_vehicle_id: select
+        owner_id: select
+        contract_created_by: select
+        rental_type: select:config
+        reconciliation: select:config
+        has_maintain: check
+        has_insurance: check
+        rental_from_date: date
+        rental_to_date: date
+        contract_paper.owner_contract: file
+        contract_paper.delivery_report: file
+        contract_note: textarea
+    - in: "body"
+      name: "body"
+      required: true
+      schema:
+        allOf:
+          - $ref: "#/definitions/OwnerContractParams"
+          - required:
+              - owner_id
+              - branch_vehicle_id
+
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

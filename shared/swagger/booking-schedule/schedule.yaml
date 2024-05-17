@@ -1,0 +1,63 @@
+get:
+  tags:
+  - "booking-schedule"
+  summary: "Lịch xe"
+  operationId: "BookingSchedule"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      from_date: date
+      to_date: date
+      vehicle_class: select:config
+      branch_id: select
+      show_avaiable: check
+      date_type: select:config
+      price_range: select:config
+  - in: "query"
+    name: "from_date"
+    type: "string"
+    description: "Từ ngày"
+    format: "YYYY-MM-DD"
+  - in: "query"
+    name: "to_date"
+    type: "string"
+    description: "Đến ngày"
+    format: "YYYY-MM-DD"
+  - in: "query"
+    name: "date_type"
+    type: "string"
+    description: Kiểu ngày cần tìm kiếm
+    enum: ["receive", "return"]
+  - in: "query"
+    name: "branch_id"
+    type: "integer"
+    description: Chi nhánh
+  - in: "query"
+    name: "vehicle_class"
+    type: "string"
+    description: Loại xe
+  - in: "query"
+    name: "license_number"
+    type: "string"
+    description: Biển số xe
+  - in: "query"
+    name: "show_avaiable"
+    type: "string"
+    enum: [0, 1]
+    description: "Chỉ lấy xe trống"
+  - in: "query"
+    name: "price_range"
+    type: "string"
+    description: "Khoảng giá"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/DefScheduleResponse"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+ 

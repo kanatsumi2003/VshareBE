@@ -1,0 +1,146 @@
+get:
+  tags:
+    - "booking"
+  summary: "Lấy thông tin đơn đặt xe"
+  operationId: "BookingDetail"
+  parameters:
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/Booking"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+put:
+  tags:
+    - "booking"
+  summary: "Cập nhật thông tin đơn đặt xe"
+  operationId: "BookingEdit"
+  parameters:
+    - in: "query"
+      name: "3p"
+      type: "string"
+      default:
+        source: select:config
+        vehicle_type: select:config
+        branch_id: select
+        estimate_branch_vehicle_id: select
+        actual_branch_vehicle_id: select
+        receive_type: select:config
+        give_user_id: select
+        return_user_id: select
+        saler_id: select
+        approve_by: select
+        approve_status: select:config
+        level: select:config
+        payment_method: select:config
+        receive_note: textarea
+        return_note: textarea
+        reason_rental: textarea
+        approve_note: textarea
+        identity_date: date
+        driver_licence_date: date
+        estimate_receive_datetime: datetime
+        estimate_return_datetime: datetime
+        contract_receive_datetime: datetime
+        contract_return_datetime: datetime
+        actual_receive_datetime: datetime
+        actual_return_datetime: datetime
+        estimate_deposit_paper: select:config
+        estimate_deposit_asset: select:config
+        deposit.identity_paper: select:config
+        deposit.identity_paper_returned: check
+        deposit.motor_returned: check
+        deposit.motor_registration_returned: check
+        deposit.cash_returned: check
+        customer_image.identity_front: file
+        customer_image.identity_back: file
+        customer_image.driver_licence_front: file
+        customer_image.driver_licence_back: file
+        customer_image.house_hold: file
+        before_car_image.car_front: file
+        before_car_image.car_back: file
+        before_car_image.car_left: file
+        before_car_image.car_right: file
+        before_car_image.car_interior: file
+        before_car_image.fuel_gauge: file
+        before_car_image.car_video: file
+        after_car_image.car_front: file
+        after_car_image.car_back: file
+        after_car_image.car_left: file
+        after_car_image.car_right: file
+        after_car_image.car_interior: file
+        after_car_image.fuel_gauge: file
+        after_car_image.car_video: file
+        booking_paper.rental_contract: file
+        booking_paper.receive_report: file
+        booking_paper.return_report: file
+        contract_created_by: select
+        contract_sign_date: datetime
+        return_customer_assets: check
+        hold_customer_note: textarea
+        hold_customer_reason: textarea
+        hold_customer_return_date: date
+        receive_vehicle_status: textarea
+        return_vehicle_status: textarea
+        other_costs: select:config
+        customer_note: textarea
+        birthday: date
+        booking_status: select:config
+        vehicle_full: check
+        return_vehicle_same: check
+        add_ons: select:config
+        car_document_image.registration_document: file
+        car_document_image.registration_certificate: file
+        car_document_image.liability_insurance_certificate: file
+        car_document_image.physical_insurance_certificate: file
+        car_document_image.other_document: file
+        operation_costs.code: select:config
+        estimate_add_ons.code: select:config
+        post_operation_costs.code: select:config
+        final_note: textarea
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+    - in: "body"
+      name: "body"
+      required: true
+      schema:
+        $ref: "#/definitions/BookingParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+    - "booking"
+  summary: "Xóa đơn đặt xe"
+  operationId: "BookingDelete"
+  parameters:
+    - name: "id"
+      in: "path"
+      required: true
+      type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

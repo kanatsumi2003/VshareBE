@@ -1,0 +1,127 @@
+get:
+  tags:
+  - "customer"
+  summary: "Lấy danh sách đơn hàng của Khách hàng"
+  operationId: "CustomerBookings"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      receive_datetime_from: date
+      receive_datetime_to: date
+      return_datetime_from: date
+      return_datetime_to: date
+      booking_status: multi_select:config
+      level: multi_select:config
+      source: select:config
+      estimate_branch_vehicle_id: select
+      actual_branch_vehicle_id: select
+      branch_id: select
+  - in: "query"
+    name: "code"
+    type: "string"
+  - in: "query"
+    name: "level"
+    type: "string"
+  - in: "query"
+    name: "booking_status"
+    type: "integer"
+  - in: "query"
+    name: "branch_id"
+    type: "integer"
+    description: Chi nhánh
+  - in: "query"
+    name: "estimate_branch_vehicle_id"
+    type: "integer"
+    description: Xe giao dự kiến
+  - in: "query"
+    name: "actual_branch_vehicle_id"
+    type: "integer"
+    description: Xe giao thực tế
+  - in: "query"
+    name: "source"
+    type: "string"
+    description: "Nguồn"
+  - in: "query"
+    name: "receive_datetime_from"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày nhận từ
+  - in: "query"
+    name: "receive_datetime_to"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày nhận đến
+  - in: "query"
+    name: "return_datetime_from"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày trả từ
+  - in: "query"
+    name: "return_datetime_to"
+    type: "string"
+    format: 'YYYY-MM-DD'
+    description: Ngày trả đến
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            code:
+              type: string
+              description: Mã đơn
+            branch_id:
+              type: string
+              description: Chi nhánh
+            fullname:
+              type: string
+              description: Khách hàng
+            phone:
+              type: string
+              description: Số điện thoại
+            email:
+              type: string
+              description: Email
+            estimate_branch_vehicle_id:
+              type: string
+              description: Xe thuê dự kiến
+            actual_branch_vehicle_id:
+              type: string
+              description: Xe thuê thực tế
+            price:
+              type: string
+              description: Giá thuê DK/TT
+            receive_datetime:
+              type: string
+              description: Trả xe DK/TT
+            return_datetime:
+              type: string
+              description: Trả xe DK/TT
+            rental_duration:
+              type: string
+              description: Ngày thuê DK/TT
+            source:
+              type: string
+              description: Nguồn
+            level:
+              type: string
+              description: Level
+            booking_status:
+              type: integer
+              description: Trạng thái
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+ 

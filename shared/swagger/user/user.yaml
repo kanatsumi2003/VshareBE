@@ -1,0 +1,94 @@
+get:
+  tags:
+  - "user"
+  summary: "Danh sách Người dùng"
+  operationId: "UserList"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      branch_id: multi_select
+  - in: "query"
+    name: "branch_id"
+    type: integer
+    description: "ID chi nhánh"
+  - in: "query"
+    name: "username"
+    type: "string"
+    description: "Tên đăng nhập"
+  - in: "query"
+    name: "fullname"
+    type: "string"
+    description: "Tên người dùng"
+  - in: "query"
+    name: "email"
+    type: "string"
+    description: "Email"
+  - in: "query"
+    name: phone
+    type: string
+    description: Số điện thoại
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: integer
+              description: ID
+            branch_id:
+              type: string
+              description: Chi nhánh
+            username:
+              type: string
+              description: Tên đăng nhập
+            fullname:
+              type: string
+              description: Họ và tên
+            phone:
+              type: string
+              description: Số điện thoại
+            email:
+              type: string
+              description: Email
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "user"
+  summary: "Thêm mới người dùng"
+  operationId: "UserCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      branch_id: select
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/UserParams"
+        - required:
+          - username
+          - fullname
+          - phone
+          - branch_id
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

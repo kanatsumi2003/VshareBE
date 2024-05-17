@@ -1,0 +1,58 @@
+get:
+  tags:
+  - "attribute"
+  summary: "Danh sách tính năng"
+  operationId: "AttributeList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            name: 
+              type: "string"
+              description: Tên tính năng
+            icon:
+              type: "string"
+              description: Icon/hình đại diện
+            priority:
+              type: "integer"
+              description: Thứ tự sắp xếp
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "attribute"
+  summary: "Thêm mới tính năng"
+  operationId: "AttributeCreate"
+  parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/AttributeParams"
+        - required:
+          - name
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

@@ -1,0 +1,30 @@
+put:
+  tags:
+  - "delivery-task"
+  summary: "Cập nhật giao nhận"
+  operationId: "DeliveryTaskEdit"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      task_status: select:config
+      user_id: select
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/DeliveryTaskParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

@@ -1,0 +1,69 @@
+get:
+  tags:
+  - "district"
+  summary: "Lấy thông tin quận huyện"
+  operationId: "DistrictDetail"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/District"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+    
+put:
+  tags:
+  - "district"
+  summary: "Cập nhật thông tin quận huyện"
+  operationId: "DistrictEdit"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      province_id: select
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/DistrictParams"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+delete:
+  tags:
+  - "district"
+  summary: "Xóa quận huyện"
+  operationId: "DistrictDelete"
+  parameters:
+  - name: "id"
+    in: "path"
+    required: true
+    type: "integer"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "ERROR"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

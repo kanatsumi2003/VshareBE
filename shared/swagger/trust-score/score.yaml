@@ -1,0 +1,61 @@
+get:
+  tags:
+  - "trust-score"
+  summary: "Danh sách điểm tín dụng"
+  operationId: "TrustScoreList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: "Tên điểm tín dụng"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+              example: 10
+            name:
+              type: string
+              description: Tên tiêu chí
+            trust_scores:
+              type: string
+              description: Điểm đánh giá
+              default: 0
+            note:
+              type: string
+              description: Mô tả
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "trust-score"
+  summary: "Thêm mới điểm tín dụng"
+  operationId: "TrustScoreCreate"
+  parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/TrustScoreParams"
+        - required:
+          - name
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

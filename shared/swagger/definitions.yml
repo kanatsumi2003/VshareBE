@@ -1,0 +1,603 @@
+ApiResponseError:
+  $ref: './definitions/ApiResposeError.yml'
+CustomerParams:
+  $ref: './customer/DefCustomerParams.yml'
+Customer:
+  $ref: './customer/DefCustomer.yml'
+DefScheduleResponse:
+  $ref: './booking-schedule/DefScheduleResponse.yml'
+BranchParams:
+  $ref: './branch/DefBranchParams.yml'
+Branch:
+  $ref: './branch/DefBranch.yml'
+BookingParams:
+  $ref: './booking/DefBookingParams.yml'
+Booking:
+  $ref: './booking/DefBooking.yml'
+DeliveryTask:
+  $ref: './delivery-task/DefTask.yml'
+DeliveryTaskParams:
+  $ref: './delivery-task/DefTaskParams.yml'
+DeliveryParams:
+  $ref: './delivery-task/DefDeliveryParams.yml'
+DeliveryScheduleResponse:
+  $ref: './delivery-task/DefScheduleResponse.yml'
+DeliveryScheduleItem:
+  $ref: './delivery-task/DefScheduleItem.yml'
+QuickBookingParams:
+  $ref: './booking/DefQuickBookParams.yml'
+OwnerContractItem:
+  $ref: './owner-contract/DefContractItem.yml'
+OwnerContractDetail:
+  $ref: './owner-contract/DefContractDetail.yml'
+OwnerContractParams:
+  $ref: './owner-contract/DefContractParams.yml'
+OwnerContractPaper: 
+  $ref: './owner-contract/DefContractPaper.yml'
+ProvinceParams:
+  type: "object"
+  properties:
+    name:
+      type: "string"
+      description: Tên tỉnh thành
+    position:
+      type: integer
+      description: Thứ tự sắp xếp
+Province:
+  allOf:
+    - $ref: "#/definitions/ProvinceParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: "string"
+          description: Mã tỉnh thành
+DistrictParams:
+  type: "object"
+  properties:
+    province_id:
+      type: "integer"
+      description: Tỉnh/thành phố
+    name:
+      type: "string"
+      description: Tên quận huyện
+    position:
+      type: "string"
+      description: Thứ tự sắp xếp
+District:
+  allOf:
+    - $ref: "#/definitions/DistrictParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: "string"
+          description: Mã quận huyện
+        parent_id: 
+          type: "integer"
+          description: "Tỉnh/thành phố"
+VehicleBrandParams:
+  type: "object"
+  properties:
+    vehicle_type:
+      type: "string"
+      description: Mã loại xe
+    name:
+      type: "string"
+      description: Tên hãng xe
+    position:
+      type: "string"
+      description: Thứ tự sắp xếp
+VehicleBrand:
+  allOf:
+    - $ref: "#/definitions/VehicleBrandParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+VehicleModelParams:
+  type: "object"
+  properties:
+    brand_id:
+      type: "integer"
+      description: ID hãng xe
+    name:
+      type: "string"
+      description: Tên hiệu xe
+VehicleModel:
+  allOf:
+    - $ref: "#/definitions/VehicleModelParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+VehicleParams:
+  type: "object"
+  properties:
+    vehicle_type:
+      type: "string"
+      description: Loại xe
+      enum: ['C','M']
+    brand_id:
+      type: "integer"
+      description: Hãng xe
+      example: 1
+    model_id:
+      type: "integer"
+      description: Hiệu xe
+      example: 1
+    vehicle_class:
+      type: "string"
+      description: Hạng xe
+      example: C
+    version:
+      type: "string"
+      description: Phiên bản
+      example: "2.0"
+    seats:
+      type: "integer"
+      description: Số chỗ ngồi
+      example: 4
+    transmission:
+      type: "string"
+      description: Truyền động
+      enum: ['M', 'A']
+    fuel:
+      type: "string"
+      description: Nhiên liệu
+      enum: ['G','O','E']
+    fuel_consumption:
+      type: "string"
+      description: Mức tiêu thụ nhiên liệu (vd 10l/100km)
+      example: "10l/100km"
+    style:
+      type: "string"
+      description: Kiểu dáng xe
+      enum: ["Sedan","MVP","SUV/CUV","MiniVan/Van","Hatchback","Pickup"]
+      example: "Sedan"
+    attributes:
+      type: "array"
+      description: Tính năng xe
+      items:
+        type: "integer"
+        description: ID tính năng xe,
+      example: [1]
+    image:
+      type: string
+      description: Ảnh đại diện
+Vehicle:
+  allOf:
+    - $ref: "#/definitions/VehicleParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+        attributes:
+          type: "array"
+          items:
+            $ref: "#/definitions/Attribute"
+AttributeParams:
+  type: "object"
+  properties:
+    name: 
+      type: "string"
+      description: Tên tính năng
+    icon:
+      type: "string"
+      description: Icon/hình đại diện
+    priority:
+      type: "integer"
+      description: Thứ tự sắp xếp
+Attribute:
+  allOf:
+    - $ref: "#/definitions/AttributeParams"
+    - type: object
+      properties:
+        id:
+          type: integer
+Procedure:
+  type: object
+  properties:
+    identity:
+      type: string
+      description: CMND
+      enum: ['hold','verify']
+      example: 'verify'
+    identity_note:
+      type: string
+      description: CMND ghi chú
+    household:
+      type: string
+      description: Sổ hộ khẩu
+      enum: ['hold','verify']
+      example: 'verify'
+    household_note:
+      type: string
+      description: Sổ hộ khẩu ghi chú
+    driver_licence:
+      type: string
+      description: Bằng lái
+      enum: ['hold','verify']
+      example: 'verify'
+    driver_licence_note:
+      type: string
+      description: Bằng lái ghi chú
+    deposit:
+      type: string
+      description: Đặt cọc
+      enum: ['hold','verify']
+      example: 'verify'
+    deposit_note:
+      type: string
+      description: Đặt cọc ghi chú
+    labor_contract:
+      type: string
+      description: Hợp đồng lao động
+      enum: ['hold','verify']
+      example: 'hold'
+    labor_contract_note:
+      type: string
+      description: Hợp đồng lao động ghi chú
+    other:
+      type: string
+      description: Giấy tờ khác
+      enum: ['hold','verify']
+      example: 'hold'
+    other_note:
+      type: string
+      description: Giấy tờ khác ghi chú
+    identity_paper_returned:
+      type: boolean
+      description: Trạng thái trả giấy tờ
+    motor_returned:
+      type: boolean
+      description: Trạng thái trả xe máy
+    motor_registration_returned:
+      type: boolean
+      description: Trạng thái trả đãng ký xe
+HolidayEventPrice:
+  type: object
+  properties:
+    "national":
+      type: number
+      description: Mùng 2/9
+      example: 150
+    "hungking":
+      type: number
+      description: Giỗ tổ Hùng Vương
+      example: 150
+    "liberation":
+      type: number
+      description: 30/4-01/05
+      example: 10000
+    "newyear":
+      type: number
+      description: Tết Dương lịch
+      example: 200
+    "lunar":
+      type: number
+      description: Tết Âm lịch
+      example: 200
+WeekDaysPrice:
+  type: object
+  properties:
+    mon:
+      type: number
+      description: Thứ 2
+    tue:
+      type: number
+      description: Thứ 3
+    wed:
+      type: number
+      description: Thứ 4
+    thu:
+      type: number
+      description: Thứ 5
+    fri:
+      type: number
+      description: Thứ 6
+    sat:
+      type: number
+      description: Thứ 7
+    sun:
+      type: number
+      description: Chủ Nhật
+Addon:
+  type: object
+  properties:
+    code:
+      type: string
+      description: Mã add-on
+    cost:
+      type: integer
+      description: Số tiền
+    unit:
+      type: string
+      description: Đơn vị tính
+    note:
+      type: string
+      description: Ghi chú
+AddonPrice:
+  type: object
+  properties:
+    code:
+      type: string
+      description: Mã add-on
+    cost:
+      type: integer
+      description: Số tiền
+    note:
+      type: string
+      description: Ghi chú
+BranchVehicleParams:
+  $ref: './branch-vehicle/DefBranchVehicleParams.yml'
+BranchVehicle:
+  $ref: './branch-vehicle/DefBranchVehicle.yml'
+CustomerDayPriceRule:
+  type: object
+  description: Cấu hình giá thuê bổ sung
+  properties:
+    day_count_from: 
+      type: integer
+      description: Số ngày thuê từ
+      example: 5
+    day_count_to: 
+      type: integer
+      description: Số ngày thuê đến
+      example: 7
+    price: 
+      type: integer
+      description: Giá thuê (<=100 tính theo %, > 100 tính theo giá fix)
+      example: 98
+
+VehiclePriceParams:
+  type: object
+  properties:
+    branch_id:
+      type: integer
+      description: Chi nhánh
+    vehicle_class:
+      type: string
+      description: Hạng xe
+      example: SUV
+    base_price:
+      type: integer
+      description: Giá ngày thường
+      example: 100000
+    weekend_price:
+      type: integer
+      description: Giá ngày cuối tuần
+      example: 110000
+    month_price:
+      type: integer
+      description: Giá thuê tháng
+      example: 18000000
+    customer_day_price_rules:
+      type: "array"
+      items:
+        allOf:
+          - $ref: '#/definitions/CustomerDayPriceRule'
+          - required:
+            - day_count_from
+            - day_count_to
+            - price
+VehiclePrice:
+  allOf:
+    - $ref: '#/definitions/VehiclePriceParams'
+    - type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: YYYY-MM-DDTHH:mm:ssz
+          description: Thời gian tạo
+          example: 2022-12-24T10:00:00+00.00
+        updated_at:
+          type: string
+          format: YYYY-MM-DDTHH:mm:ssz
+          description: Thời gian cập nhật gần nhất
+          example: 2022-12-24T10:00:00+00.00
+Vat:
+  type: object
+  properties:
+    company_name: 
+      type: string
+      description: Tên công ty
+    company_tax: 
+      type: string
+      description: MST công ty
+    company_address:
+      type: string
+      description: Địa chỉ công ty
+    company_email:
+      type: string
+      description: Email công ty
+CarImage:
+  type: object
+  properties:
+    car_front:
+      type: string
+      description: Ảnh chụp đầu xe
+    car_back:
+      type: string
+      description: Ảnh chụp đuôi xe
+    car_right:
+      type: string
+      description: Ảnh chụp bên phải xe
+    car_left:
+      type: string
+      description: Ảnh chụp bên trái xe
+    car_interior:
+      type: string
+      description: Ảnh nội thất
+    fuel_gauge:
+      type: string
+      description: Ảnh đồng hồ
+    car_video:
+      type: string
+      description: Video xe
+CustomerImage:
+  type: object
+  properties:
+    identity_front:
+      type: string
+      description: CMND/CCCD mặt trước
+    identity_back:
+      type: string
+      description: CMND/CCCD mặt sau
+    driver_licence_front:
+      type: string
+      description: Bằng lái xe mặt trước
+    driver_licence_back:
+      type: string
+      description: Bằng lái xe mặt sau
+    house_hold:  
+      type: string
+      description: Hộ khẩu
+BookingPaper:
+  type: object
+  properties:
+    rental_contract:
+      type: string
+      description: Hợp đồng thuê xe
+    receive_report:
+      type: string
+      description: Biên bản nhận xe
+    return_report:
+      type: string
+      description: Biên bản trả xe
+Deposit:
+  type: object
+  properties:
+    identity_paper:
+      type: string
+      description: Giấy tờ đặt cọc
+      example: cmnd
+    identity_paper_note:
+      type: string
+      description: Thông tin giấy tờ đặt cọc
+      example: '123456789'
+    identity_paper_returned:
+      type: boolean
+      description: Đã trả
+      default: false
+      example: true
+    motor:
+      type: string
+      description: Hiệu xe, biển số xe máy
+    motor_returned:
+      type: boolean
+      default: false
+      description: Đã trả
+      example: true
+    motor_registration:
+      type: string
+      description: Đăng ký xe máy
+    motor_registration_returned:
+      type: boolean
+      default: false
+      description: Đã trả
+      example: true
+    cash: 
+      type: integer
+      description: Số tiền cọc
+    cash_returned:
+      type: boolean
+      default: false
+      description: Đã trả
+      example: true
+    other: 
+      type: string
+      description: Thông tin tài sản khác
+    other_returned:
+      type: boolean
+      default: false
+      description: Đã trả
+      example: true
+OtherCost:
+  type: object
+  properties:
+    code:
+      type: string
+      description: Mã phí phát sinh
+    cost:
+      type: integer
+      description: Số tiền
+    note:
+      type: string
+      description: Ghi chú
+OperationCost:
+  type: object
+  properties:
+    code:
+      type: string
+      description: Mã phí vận hành
+    cost:
+      type: integer
+      description: Số tiền
+    note:
+      type: string
+      description: Ghi chú
+UserParams:
+  $ref: './user/DefUserParams.yml'
+User:
+  $ref: './user/DefUser.yml'
+TrustScoreParams:
+  type: object
+  properties:
+    name:
+      type: string
+      description: Tên tiêu chí
+    trust_scores:
+      type: array
+      items:
+        type: object
+        properties:
+          point:
+            type: integer
+            description: Điểm
+            default: 0
+          name:
+            type: string
+            description: Đánh giá
+    note:
+      type: string
+      description: Mô tả
+TrustScore:
+  allOf:
+    - $ref: '#/definitions/TrustScoreParams'
+    - type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+CarDocumentImage:
+  type: object
+  properties:
+    registration_document:
+      type: string
+      description: Đăng ký
+    registration_certificate:
+      type: string
+      description: Đăng kiểm
+    liability_insurance_certificate:
+      type: string
+      description: Bảo hiểm TNDSBB
+    physical_insurance_certificate:
+      type: string
+      description: Bảo hiểm vật chất xe
+    other_document:
+      type: string
+      description: Giấy tờ khác
+
+inline_response_200:
+  type: "object"
+  properties:
+    status:
+      type: "string"
+  example:
+    status: "success"

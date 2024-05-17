@@ -1,0 +1,31 @@
+version: '3'
+services:
+  vshare_api:
+    container_name: vshare_api
+    build: .
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 8800:8800
+    command: npm run dev
+    depends_on:
+      - vshare_db
+    # networks:
+    #   - default
+
+  vshare_db:
+    container_name: vshare_db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+
+# networks:
+#   default:
+#     external:
+#       name: vshare-network

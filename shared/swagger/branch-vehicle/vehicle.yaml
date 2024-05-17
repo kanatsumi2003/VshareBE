@@ -1,0 +1,119 @@
+get:
+  tags:
+  - "branch-vehicle"
+  summary: "Danh sách xe chi nhánh"
+  operationId: "BranchVehicleList"
+  parameters:
+  - in: "query"
+    name: "name"
+    type: "string"
+    description: "Tên xe"
+  responses:
+    200:
+      description: "Success"
+      schema:
+        type: "array"
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID
+            branch_name:
+              type: string
+              description: Chi nhánh
+            name:
+              type: string
+              description: Tên xe
+            owner_name:
+              type: string
+              description: Chủ xe
+            customer_base_price:
+              type: string
+              description: Giá ngày thường
+            customer_weekend_price:
+              type: string
+              description: Giá cuối tuần
+            customer_month_price:
+              type: string
+              description: Giá tháng
+            customer_month_km_limit:
+              type: string
+              description: Giới hạn km/tháng
+            customer_overkm_price:
+              type: string
+              description: Phí vượt km
+            customer_overtime_price:
+              type: string
+              description: Phí quá giờ
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"
+
+post:
+  tags:
+  - "branch-vehicle"
+  summary: "Thêm mới xe chi nhánh"
+  operationId: "BranchVehicleCreate"
+  parameters:
+  - in: "query"
+    name: "3p"
+    type: "string"
+    default:
+      vehicle_id: select
+      branch_id: select
+      owner_id: select
+      rental_type: select:config
+      has_maintain: check
+      has_insurance: check
+      attributes: multi_select
+      insurance_expire_date: date
+      registry_date: date
+      car_image.car_front: file
+      car_image.car_back: file
+      car_image.car_left: file
+      car_image.car_right: file
+      car_image.car_interior: file
+      car_image.fuel_gauge: file
+      car_image.car_video: file
+      latest_car_image.car_front: file
+      latest_car_image.car_back: file
+      latest_car_image.car_left: file
+      latest_car_image.car_right: file
+      latest_car_image.car_interior: file
+      latest_car_image.fuel_gauge: file
+      latest_car_image.car_video: file
+      active: check
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      allOf:
+        - $ref: "#/definitions/BranchVehicleParams"
+        - type: object
+          properties:
+            attributes:
+              type: "array"
+              items:
+                type: "integer"
+                description: "ID tính năng xe chi nhánh"
+        - required:
+          - branch_id
+          - vehicle_id
+          - license_number
+          - customer_base_price
+          - customer_weekend_price
+          - customer_day_km_limit
+          - customer_overkm_price
+          - customer_overtime_price
+  
+  responses:
+    200:
+      description: "Success"
+      schema:
+        $ref: "#/definitions/inline_response_200"
+    400:
+      description: "Error"
+      schema:
+        $ref: "#/definitions/ApiResponseError"

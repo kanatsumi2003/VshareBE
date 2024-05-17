@@ -1,0 +1,167 @@
+type: object
+properties:
+  booking_id:
+    type: string
+    description: ID đơn hàng
+  booking_code:
+    type: string
+    description: Mã đơn hàng
+  branch_name:
+    type: string
+    description: Chi nhánh thuê
+    example: Ocen Park
+  fullname:
+    type: string
+    description: Họ và tên
+    example: Nguyễn Văn A
+  phone:
+    type: string
+    description: Số điện thoại
+    example: "0999999999"
+  branch_vehicle_name:
+    type: string
+    description: Tên xe
+  prepay:
+    type: integer
+    description: Tiền cọc giữ xe
+    example: 10000000
+  actual_price:
+    type: integer
+    description: Tiền thuê xe thực tế
+    example: 16020000
+  total_amount:
+    type: integer
+    description: Tổng tiền thuê xe sau KM
+    example: 30000
+  remain_amount:
+    type: integer
+    description: Số tiền cần thanh toán
+    example: 6020000
+  receive_note:
+    type: string
+    description: Ghi chú khi giao xe
+  return_note:
+    type: string
+    description: Ghi chú khi trả xe
+  delivery_fee:
+    type: integer
+    description: Phí giao nhận xe
+    example: 100000
+  estimate_discount_amount:
+    type: integer
+    description: Số tiền khuyến mại tạm tính
+    example: 30000
+  discount_amount:
+    type: integer
+    description: Số tiền khuyến mại
+    example: 30000
+  vat_cost:
+    type: integer
+    description: Thuế VAT
+  operation_costs:
+    type: array
+    description: Các loại phí vận hành trước và trong giao dịch
+    items:
+      $ref: '#/definitions/OperationCost'
+  post_operation_costs:
+    type: array
+    description: Các loại phí vận hành sau giao dịch
+    items:
+      $ref: '#/definitions/OperationCost'
+  receive_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày nhận
+    example: 2022-12-23 10:00
+  return_datetime:
+    type: string
+    format: YYYY-MM-DD HH:mm
+    description: Ngày trả
+    example: 2022-12-26 19:00 
+  rental_duration:
+    type: string
+    description: Số ngày thuê
+    example: 4.5
+  give_user_id:
+    type: integer
+    description: Người giao xe
+    example: 4
+  return_user_id:
+    type: integer
+    description: Người nhận xe từ khách hàng
+    example: 5
+  receive_etc_balance:
+    type: integer
+    description: Tài khoản ETC lúc giao
+    example: 1050000
+  return_etc_balance:
+    type: integer
+    description: Tài khoản ETC lúc trả
+    example: 1050000
+  receive_km:
+    type: integer
+    description: Số km lúc nhận xe
+    example: 4000
+  return_km:
+    type: integer
+    description: Số km khi trả xe
+    example: 4800
+  receive_fuel:
+    type: integer
+    description: Nhiên liệu lúc nhận xe (%)
+    example: 100
+  return_fuel:
+    type: integer
+    description: Nhiên liệu lúc trả xe (%)
+    example: 80
+  vehicle_full:
+    type: boolean
+    description: Xe hoạt động bình thường, đầy đủ giấy tờ và đồ dự phòng
+  receive_vehicle_status:
+    type: string
+    description: Tình trạng xe khi giao
+    example: Xe bị tróc sơn ở đuôi xe
+  return_vehicle_same:
+    type: boolean
+    description: Tình trạng xe khi trả giống ban đầu
+  return_vehicle_status:
+    type: string
+    description: Tình trạng xe khi trả
+    example: Xe bị tróc sơn ở đuôi xe
+  vat:
+    $ref: '#/definitions/Vat'
+    description: Thông tin hóa đơn
+  other_costs:
+    type: array
+    description: Các loại phí phát sinh
+    items:
+      $ref: '#/definitions/OtherCost'
+  deposit: 
+    $ref: '#/definitions/Deposit'
+    description: Khách đặt cọc
+  deposit_images:
+    type: array
+    description: Ảnh tài sản đặt cọc
+    items:
+      type: string
+      description: Link file ảnh
+  before_car_image:
+    $ref: '#/definitions/CarImage'
+    description: Ảnh xe trước khi giao
+  after_car_image:
+    $ref: '#/definitions/CarImage'
+    description: Ảnh xe sau khi trả
+  add_ons:
+    type: array
+    description: Dịch vụ add-on
+    items:
+      $ref: '#/definitions/AddonPrice'
+      description: Dịch vụ mua thêm
+  booking_paper:
+    $ref: '#/definitions/BookingPaper'
+    description: Các loại hợp đồng, biên bản
+  delivery_status:
+    type: string
+    description: Trạng thái giao nhận
+    enum: ['pending', 'received', 'returned', 'canceled']
+  

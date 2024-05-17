@@ -1,0 +1,11 @@
+type: object
+description: Hợp đồng và biên bản
+properties:
+  owner_contract:
+    type: string
+    description: Hợp đồng thuê với chủ xe
+    example: https://example.com/owner_contract.docx
+  delivery_report:
+    type: string
+    description: Biên bản bàn giao với chủ xe
+    example: https://example.com/delivery_report.docx

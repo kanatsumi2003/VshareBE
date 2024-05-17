@@ -1,0 +1,7 @@
+allOf:
+  - $ref: '#/definitions/OwnerContractParams'
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 10
