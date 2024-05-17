@@ -55,11 +55,13 @@ jobs:
             echo "DOCKER_REGISTRY=${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.VERSION_PRODUCTION }}" >> $GITHUB_ENV
             echo "CONTAINER_NAME=${{ vars.CONTAINER_NAME_PRODUCTION }}" >> $GITHUB_ENV
             echo "CONTAINER_PORT=${{ vars.CONTAINER_PORT_PRODUCTION }}" >> $GITHUB_ENV
+            echo "VOLUME=${{ vars.VOLUME_UPLOAD_FILE_PRODUCTION }}" >> $GITHUB_ENV
 
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "DOCKER_REGISTRY=${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.VERSION_DEV }}" >> $GITHUB_ENV
             echo "CONTAINER_NAME=${{ vars.CONTAINER_NAME_DEV }}" >> $GITHUB_ENV   
             echo "CONTAINER_PORT=${{ vars.CONTAINER_PORT_DEV }}" >> $GITHUB_ENV
+            echo "VOLUME=${{ vars.VOLUME_UPLOAD_FILE_DEV }}" >> $GITHUB_ENV
 
           fi    
       - name: Deploy package to VPS
@@ -78,4 +80,4 @@ jobs:
             docker rmi ${{ env.DOCKER_REGISTRY }}  || true
             docker pull ${{ env.DOCKER_REGISTRY }}
 
-            docker run -d --name ${{ env.CONTAINER_NAME }} --restart unless-stopped -p ${{ env.CONTAINER_PORT }}:${{ vars.PORT }} ${{ env.DOCKER_REGISTRY }}
+            docker run -d --name ${{ env.CONTAINER_NAME }} --restart unless-stopped -v ${{ env.VOLUME }}:${{ vars.UPLOAD_FOLDER }} -p ${{ env.CONTAINER_PORT }}:${{ vars.PORT }} ${{ env.DOCKER_REGISTRY }}
