@@ -3,7 +3,7 @@ info:
   description: Hệ thống luồng dữ liệu Vshare
   version: "1.0.0"
   title: "Vshare"
-host: "localhost:8800"
+host: "https://api-vshare.amazingtech.vn/"
 basePath: "/api/v1"
 tags:
 - name: province
