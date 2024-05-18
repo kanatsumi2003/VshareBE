@@ -3,7 +3,7 @@ info:
   description: Hệ thống luồng dữ liệu Vshare
   version: 1.0.0
   title: Vshare
-host: https://api-vshare.amazingtech.vn/
+host: api-vshare.amazingtech.vn
 basePath: /api/v1
 tags:
   - name: province
@@ -39,7 +39,7 @@ tags:
   - name: owner-contract
     description: Quản lý hợp đồng
 schemes:
-  - http
+  - https
 paths:
   /customers:
     get:
